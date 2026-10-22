@@ -1,0 +1,1330 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { margin: 0; }
+  [hidden] { display: none !important; }
+</style>
+<title>Notas de catequesis PAC</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap">
+<style>
+  /* Layout: app móvil de una columna. Cabecera mínima, contenido a 40 rem como máximo y barra inferior fija con 4 secciones. Cada sesión se lee en capas: idea central, claves y notas completas al final. */
+  :root {
+    --bg: #F0F3F1;
+    --surface: #FAFBFA;
+    --ink: #16221E;
+    --muted: #56655F;
+    --line: #D3DCD8;
+    --accent: #1E5E4E;
+    --accent-soft: #DCEBE5;
+    --on-accent: #FFFFFF;
+    --gold-ink: #7A5A10;
+    --gold-soft: #F3EACB;
+    --mark: #F5E39B;
+    --danger: #9B2C2C;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F1614; --surface: #151F1C; --ink: #E4EDE9; --muted: #9BADA6; --line: #2A3A35;
+      --accent: #7CCBB1; --accent-soft: #1B332C; --on-accent: #0C1B16;
+      --gold-ink: #E2BE6A; --gold-soft: #2B2513; --mark: #5E4E12; --danger: #F0A0A0;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F1614; --surface: #151F1C; --ink: #E4EDE9; --muted: #9BADA6; --line: #2A3A35;
+    --accent: #7CCBB1; --accent-soft: #1B332C; --on-accent: #0C1B16;
+    --gold-ink: #E2BE6A; --gold-soft: #2B2513; --mark: #5E4E12; --danger: #F0A0A0;
+    color-scheme: dark;
+  }
+
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.5; }
+  button, input, textarea { font: inherit; color: inherit; }
+  input, textarea { box-sizing: border-box; max-width: 100%; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  mark { background: var(--mark); color: inherit; border-radius: 2px; padding: 0 .08em; }
+  a { color: var(--accent); }
+
+  .app { max-width: 40rem; margin-inline: auto; padding-inline: 1rem; padding-block: 0 6rem; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding-block: .9rem .5rem; }
+  .brand { font-family: var(--serif); font-weight: 700; font-size: 1.2rem; line-height: 1.15; }
+  .brand small { display: block; font-family: var(--sans); font-size: .66rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+
+  .btn {
+    padding: .5rem .85rem; font-size: .88rem; font-weight: 500; line-height: 1.2;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 6px; color: var(--ink);
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .btn.primary:hover { filter: brightness(1.1); color: var(--on-accent); }
+  .btn.ghost { background: transparent; border-color: transparent; color: var(--muted); }
+  .btn.danger { color: var(--danger); }
+  .btn[disabled] { opacity: .45; cursor: default; }
+  .btn.done { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+  .lab { display: block; margin-bottom: .25rem; font-size: .68rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+  .muted { color: var(--muted); }
+  h2.sec { margin: 1.6rem 0 .5rem; font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+  /* Barra inferior */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .bar-in { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 40rem; margin-inline: auto; }
+  .bar button { display: flex; flex-direction: column; align-items: center; gap: .1rem; padding: .55rem .25rem .5rem; font-size: .7rem; font-weight: 600; color: var(--muted); background: none; border: 0; }
+  .bar button svg { width: 1.4rem; height: 1.4rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .bar button[aria-current="page"] { color: var(--accent); }
+
+  /* Inicio */
+  .hero { padding: 1.1rem 1rem 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  .hero .meta { font-size: .75rem; color: var(--muted); }
+  .hero h1 { margin: .15rem 0 .6rem; font-family: var(--serif); font-size: 1.5rem; line-height: 1.2; font-weight: 700; text-wrap: balance; }
+  .idea { margin: 0 0 .75rem; padding: .75rem .85rem; background: var(--accent-soft); border-radius: 6px; }
+  .idea p { margin: 0; font-family: var(--serif); font-size: 1.08rem; line-height: 1.4; font-weight: 600; }
+  .claves { margin: 0 0 .85rem; padding-left: 1.1rem; font-family: var(--serif); font-size: 1rem; }
+  .claves li { margin-bottom: .35rem; padding-left: .15rem; }
+  .claves li::marker { color: var(--accent); }
+  .acts { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .qcard { padding: .9rem 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  .qcard .q { margin: 0 0 .6rem; font-family: var(--serif); font-size: 1.1rem; font-weight: 600; line-height: 1.35; }
+  .qcard .a { margin: 0 0 .6rem; padding-top: .6rem; border-top: 1px solid var(--line); font-family: var(--serif); }
+  .prog { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .35rem 1rem; align-items: center; margin-top: 1.1rem; font-size: .85rem; color: var(--muted); }
+  .bar2 { grid-column: 1 / -1; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+  .bar2 i { display: block; height: 100%; background: var(--accent); }
+
+  /* Lista de sesiones */
+  .sbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; padding-block: .5rem; background: var(--bg); }
+  .sbar input, .field input, .field textarea {
+    width: 100%; padding: .65rem .8rem; font-size: 1rem; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px; color: var(--ink);
+  }
+  .sbar input::placeholder, .field input::placeholder, .field textarea::placeholder { color: var(--muted); }
+  .chips { display: flex; gap: .4rem; margin-top: .5rem; overflow-x: auto; scrollbar-width: none; padding-bottom: .1rem; }
+  .chips::-webkit-scrollbar { display: none; }
+  .fchip { flex: none; padding: .3rem .8rem; font-size: .82rem; font-weight: 500; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; color: var(--ink); }
+  .fchip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .count { margin: .5rem 0 0; font-size: .78rem; color: var(--muted); }
+  .yr { margin: 1.1rem 0 0; padding-bottom: .25rem; font-size: .75rem; font-weight: 600; letter-spacing: .12em; color: var(--muted); border-bottom: 2px solid var(--ink); font-variant-numeric: tabular-nums; }
+  .row {
+    display: grid; grid-template-columns: 3.3rem minmax(0, 1fr) auto; gap: .65rem; width: 100%; padding: .75rem .1rem;
+    text-align: left; background: none; border: 0; border-bottom: 1px solid var(--line); color: inherit;
+  }
+  .row:hover .t { color: var(--accent); }
+  .row .d { padding-top: .15rem; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); line-height: 1.25; }
+  .row .d b { display: block; font-size: .95rem; letter-spacing: 0; color: var(--accent); }
+  .row .t { display: block; font-family: var(--serif); font-size: 1.04rem; line-height: 1.3; font-weight: 600; }
+  .row .s { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: .15rem; font-size: .85rem; line-height: 1.4; color: var(--muted); }
+  .row .r { display: flex; flex-direction: column; align-items: flex-end; gap: .25rem; padding-top: .2rem; font-size: .72rem; color: var(--muted); }
+  .tick { color: var(--accent); font-weight: 700; }
+  .cc { padding: 0 .45rem; background: var(--accent-soft); color: var(--accent); border-radius: 999px; font-weight: 600; }
+  .new { padding: 0 .4rem; background: var(--gold-soft); color: var(--gold-ink); border-radius: 3px; font-size: .62rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-left: .4rem; vertical-align: .1em; }
+  .gaprow { display: grid; grid-template-columns: 3.3rem minmax(0, 1fr); gap: .65rem; padding: .7rem .1rem; border-bottom: 1px solid var(--line); font-size: .85rem; color: var(--muted); }
+  .gaprow b { font-size: .8rem; color: var(--muted); font-weight: 600; text-transform: uppercase; }
+  .empty { margin: 1.5rem 0; padding: 1.1rem; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 8px; }
+
+  .cal { margin-top: 1.4rem; }
+  .cal > summary { padding: .5rem 0; font-size: .85rem; font-weight: 600; color: var(--accent); cursor: pointer; }
+  .grid { display: grid; grid-template-columns: 2.2rem repeat(12, minmax(0, 1fr)); gap: 2px; align-items: center; }
+  .grid .y { font-size: .72rem; font-weight: 600; color: var(--muted); }
+  .grid .mh { text-align: center; font-size: .62rem; font-weight: 600; color: var(--muted); }
+  .cell { display: block; width: 100%; height: 1.4rem; padding: 0; border-radius: 3px; border: 1px solid var(--line); background: var(--surface); }
+  .cell.ok { background: var(--accent); border-color: var(--accent); }
+  .cell.sin { background: transparent; border: 1.5px dashed var(--accent); }
+  .cell.no { background: repeating-linear-gradient(135deg, var(--line) 0 3px, transparent 3px 7px); }
+  .legend { display: flex; flex-wrap: wrap; gap: .3rem 1rem; margin-top: .6rem; font-size: .72rem; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: .35rem; }
+  .legend i { display: inline-block; width: .85rem; height: .85rem; border-radius: 3px; }
+
+  /* Detalle de sesión */
+  .dbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding-block: .55rem; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .dbar .pg { display: flex; gap: .35rem; }
+  .sess { padding-top: 1rem; }
+  .sess .meta { font-size: .78rem; color: var(--muted); }
+  .sess h1 { margin: .15rem 0 .2rem; font-family: var(--serif); font-size: 1.55rem; line-height: 1.2; font-weight: 700; text-wrap: balance; }
+  .sess .sub { margin: 0 0 .8rem; font-size: .9rem; color: var(--muted); }
+  .pensar { margin: 1rem 0; padding: .75rem .9rem; border: 1px dashed var(--accent); border-radius: 6px; }
+  .pensar p { margin: 0; font-family: var(--serif); font-style: italic; }
+  .terms { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: .9rem 0; }
+  .chip { padding: .25rem .75rem; font-size: .84rem; font-weight: 500; color: var(--accent); background: var(--accent-soft); border: 0; border-radius: 999px; }
+  .chip:hover { background: var(--accent); color: var(--on-accent); }
+  .chip.s { color: var(--ink); background: transparent; border: 1px solid var(--line); padding: .15rem .6rem; font-size: .78rem; }
+  .chip.s:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .chip.pick[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+  .notes { margin: 1rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .notes > summary { padding: .7rem 0; font-size: .9rem; font-weight: 600; color: var(--accent); cursor: pointer; }
+  .notes-body { padding-bottom: 1rem; font-family: var(--serif); font-size: 1.02rem; line-height: 1.6; }
+  .notes-body p { margin: 0 0 .8rem; }
+  .notes-body ul, .notes-body ol { margin: 0 0 .9rem; padding-left: 1.15rem; }
+  .notes-body li { margin-bottom: .5rem; padding-left: .15rem; }
+  .notes-body li::marker { color: var(--accent); }
+  .notes-body ol ul { margin: .4rem 0 0; }
+  .notes-body h4 { margin: 1.2rem 0 .5rem; font-family: var(--sans); font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .notes-body dl { display: grid; gap: .7rem; margin: 0 0 .9rem; }
+  .notes-body dt { font-family: var(--sans); font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+  .notes-body dd { margin: .1rem 0 0; }
+  .call { margin: 1rem 0; padding: .75rem .9rem; background: var(--gold-soft); border-radius: 4px; }
+  .call b { display: block; margin-bottom: .2rem; font-family: var(--sans); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--gold-ink); }
+  .call p, .call ol { margin: 0; }
+  .call ol { list-style: upper-alpha; padding-left: 1.3rem; }
+  blockquote { margin: 1.1rem 0 .4rem; padding-top: .7rem; border-top: 1px solid var(--accent); }
+  blockquote p { margin: 0; font-style: italic; font-size: 1.06rem; }
+  blockquote cite { display: block; margin-top: .3rem; font-family: var(--sans); font-size: .72rem; font-style: normal; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .tags { display: flex; flex-wrap: wrap; gap: .4rem; margin: .8rem 0; font-family: var(--sans); }
+  .tags .tl { flex-basis: 100%; font-size: .78rem; color: var(--muted); }
+  .tags .tg { padding: .2rem .7rem; font-size: .84rem; color: var(--accent); background: var(--accent-soft); border-radius: 999px; }
+  .links { list-style: none; padding-left: 0 !important; font-family: var(--sans); }
+  .links li { padding-left: 0; }
+  .links .u { margin-left: .5rem; font-size: .78rem; color: var(--muted); }
+  .nextrow { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; margin-top: 1.2rem; }
+  .nextrow button { padding: .6rem .75rem; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; font-size: .78rem; color: var(--muted); }
+  .nextrow button b { display: block; font-family: var(--serif); font-size: .92rem; color: var(--ink); line-height: 1.25; }
+  .nextrow button:last-child { text-align: right; }
+
+  /* Comentarios */
+  .cm { margin-top: 1.4rem; }
+  .cm h3 { margin: 0 0 .5rem; font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .cm-item { padding: .65rem 0; border-top: 1px solid var(--line); }
+  .cm-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .6rem; font-size: .8rem; color: var(--muted); }
+  .cm-h b { color: var(--ink); font-weight: 600; }
+  .cm-h .x { margin-left: auto; padding: 0 .25rem; font-size: .78rem; background: none; border: 0; color: var(--muted); text-decoration: underline; }
+  .cm-t { margin: .15rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .cm-form { margin-top: .6rem; display: grid; gap: .5rem; }
+  .cm-form textarea { width: 100%; padding: .6rem .8rem; font-size: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; resize: vertical; }
+  .cm-note { margin: .5rem 0 0; padding: .65rem .8rem; font-size: .85rem; color: var(--muted); background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; }
+
+  /* Conceptos */
+  .steps { margin: 0; padding: 0; list-style: none; counter-reset: s; }
+  .steps > li { counter-increment: s; border-bottom: 1px solid var(--line); }
+  .steps summary, .tl summary { display: grid; grid-template-columns: 1.8rem minmax(0, 1fr); gap: .5rem; align-items: baseline; padding: .7rem 0; cursor: pointer; list-style: none; }
+  .tl summary { grid-template-columns: minmax(0, 1fr); }
+  .steps summary::-webkit-details-marker, .tl summary::-webkit-details-marker { display: none; }
+  .steps summary::before { content: counter(s); display: grid; place-items: center; width: 1.5rem; height: 1.5rem; font-size: .78rem; font-weight: 700; color: var(--on-accent); background: var(--accent); border-radius: 50%; }
+  .steps summary b, .tl summary b { font-family: var(--serif); font-size: 1.04rem; font-weight: 600; }
+  .steps summary small { display: block; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .steps .in, .tl .in { padding: 0 0 .9rem 2.3rem; font-family: var(--serif); }
+  .tl .in { padding-left: 0; }
+  .steps .in p, .tl .in p { margin: 0 0 .6rem; }
+  .tl { border-bottom: 1px solid var(--line); }
+  .chips2 { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; font-family: var(--sans); font-size: .76rem; color: var(--muted); margin-bottom: .3rem; }
+  .field { display: grid; gap: .25rem; margin-bottom: .7rem; font-size: .85rem; font-weight: 600; }
+  .field textarea { resize: vertical; font-weight: 400; }
+  .field input { font-weight: 400; }
+
+  /* Repasar */
+  .deckbar { display: flex; justify-content: space-between; gap: 1rem; font-size: .82rem; color: var(--muted); }
+  .card { display: flex; flex-direction: column; gap: .8rem; min-height: 14rem; margin-top: .7rem; padding: 1.2rem 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  .card .q { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; line-height: 1.3; text-wrap: balance; }
+  .card .a { padding-top: .8rem; border-top: 1px solid var(--line); font-family: var(--serif); font-size: 1.08rem; }
+  .card .src { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; font-size: .78rem; color: var(--muted); }
+  .card .acts { margin-top: auto; }
+  .subnav { display: flex; justify-content: space-between; margin-top: .5rem; }
+  .ctrls { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .9rem; margin-top: .9rem; font-size: .85rem; }
+  .ctrls label { display: inline-flex; align-items: center; gap: .4rem; }
+
+  /* Hoja inferior y avisos */
+  .sheet { position: fixed; inset: 0; z-index: 40; display: flex; align-items: flex-end; justify-content: center; }
+  .sheet-bg { position: absolute; inset: 0; background: rgba(8, 14, 12, .55); }
+  .sheet-card { position: relative; width: 100%; max-width: 40rem; max-height: 88%; overflow-y: auto; padding: 1.1rem 1rem calc(1.1rem + env(safe-area-inset-bottom, 0px)); background: var(--bg); border-radius: 14px 14px 0 0; border: 1px solid var(--line); }
+  .sheet-card h2 { margin: 0 0 .5rem; font-family: var(--serif); font-size: 1.3rem; line-height: 1.25; }
+  .sheet-card p { margin: 0 0 .8rem; font-family: var(--serif); }
+  .sheet-card .hint { font-family: var(--sans); font-size: .8rem; color: var(--muted); }
+  .sheet-card textarea.copy { width: 100%; min-height: 9rem; padding: .6rem; font-size: .9rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+  .toast { position: fixed; left: 50%; bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px)); z-index: 50; max-width: calc(100% - 2rem); padding: .55rem .9rem; font-size: .85rem; color: var(--on-accent); background: var(--accent); border-radius: 8px; transform: translateX(-50%); }
+  .foot { margin-top: 2rem; font-size: .75rem; color: var(--muted); }
+
+  @media (max-width: 380px) {
+    .hero h1, .sess h1 { font-size: 1.35rem; }
+    .grid { grid-template-columns: 2rem repeat(12, minmax(0, 1fr)); }
+  }
+
+  /* Calendario, notas personales, borradores */
+  .calbox { margin: .9rem 0 0; padding: .7rem .75rem .8rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  .calbox h3 { margin: 0 0 .5rem; font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  button.cell { cursor: pointer; }
+  button.cell:hover { filter: brightness(1.15); }
+  .cell.multi { display: grid; place-items: center; font-size: .68rem; font-weight: 700; color: var(--on-accent); line-height: 1; }
+  .cell.now { outline: 2px solid var(--ink); outline-offset: 1px; }
+  .yr { display: flex; justify-content: space-between; align-items: center; }
+  .yr .btn { padding: .25rem .5rem; font-size: .75rem; font-weight: 500; letter-spacing: 0; }
+  .dot { width: .5rem; height: .5rem; background: var(--gold-ink); border-radius: 50%; }
+  .hint { margin: .3rem 0 .6rem; font-size: .8rem; color: var(--muted); }
+  .mine { margin-top: 1.4rem; padding-top: .9rem; border-top: 1px solid var(--line); }
+  .mine h3 { margin: 0 0 .6rem; font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .check { display: flex; align-items: center; gap: .5rem; margin: -.2rem 0 .8rem; font-size: .9rem; }
+  .dr { display: grid; gap: .4rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+  .linkbtn { padding: 0; font: inherit; color: var(--accent); background: none; border: 0; text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="app"><header id="top" class="top"></header><main id="view"></main><p class="foot" id="foot"></p></div>
+<nav class="bar" aria-label="Secciones"><div class="bar-in"><button type="button" data-tab="inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg>Inicio</button><button type="button" data-tab="sesiones"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/></svg>Sesiones</button><button type="button" data-tab="conceptos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10"/></svg>Conceptos</button><button type="button" data-tab="repasar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 3h8"/></svg>Repasar</button></div></nav>
+<div class="sheet" id="sheet" hidden><div class="sheet-bg" data-close></div><div class="sheet-card" id="sheet-c" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" hidden role="status"></div>
+<script>
+(function () {
+  'use strict';
+    const E = [
+    {
+      id: 'jun-2026', date: '2026-06',
+      title: 'Justicia, gracia y amor',
+      sub: 'Justicia, Dios · Gracia, Espíritu Santo · Amor, Cristo',
+      blocks: [
+        ['p', 'La dignidad la perdemos cuando no amamos, cuando no respondemos amando. Hay que donarse.'],
+        ['p', 'Pero no me puedo donar si no me controlo. Necesito autodominio, no egoísmo.'],
+        ['p', 'Cuando llega el pecado original, chungo. Pero Dios dejó impresa en nuestros corazones la huella de la capacidad de donación. Tenemos la misión de descubrirla y reconocerla. Somos libres para ello.'],
+        ['p', 'Llegamos a la santidad con la donación en el matrimonio. Es la vocación suma, el reflejo primero de la Santísima Trinidad. En el sacramento del matrimonio la entrega es constante, no puntual. No ha de ser utilitarista, ni siquiera, por ejemplo, al preparar el camino para el abrazo conyugal en un momento dado. Alma y cuerpo, unidos. Cuidado con separarlos.'],
+        ['p', 'Con Cristo todo se puede. Si algo parece que nos supera, ahí está Cristo, su ayuda.'],
+        ['p', 'Reconozcamos ese don que Dios nos ha dado: la capacidad para donarnos en nuestro matrimonio, sin utilitarismo, sin condiciones, sin esperar nada a cambio. Así, el autoconocimiento es fundamental. La oración y el Espíritu Santo, los necesitamos. Hemos de querernos, pero cuidado también con la vanagloria.'],
+        ['p', 'Oración y oración. El pecado nos impide reconocernos como don y nos deja una mirada turbia.'],
+        ['p', 'El termómetro de nuestro matrimonio nos da febrícula cuando vemos en nuestro esposo más defectillos. Necesitamos entonces la confesión.'],
+        ['p', 'Confiemos en Dios. Dios permite las pruebas y, si las permite, es porque con su ayuda las superamos. No caer en la desesperanza.'],
+        ['q', 'Somos libres. Cuando debamos elegir, elige AMAR.'],
+        ['q', 'No quiero nada que Dios no me haya dado. Quiero todo lo que Dios me da, y lo pongo ante Él.']
+      ]
+    },
+    {
+      id: 'gap-2026', date: '2026-05', gap: true,
+      label: 'Feb–may',
+      title: 'Febrero a mayo de 2026',
+      text: 'Febrero: no hubo catequesis. Marzo, abril y mayo: sin resumen. En abril y mayo sí hubo catequesis.',
+      months: { '2026-02': 'no', '2026-03': 'sin', '2026-04': 'sin', '2026-05': 'sin' }
+    },
+    {
+      id: 'ene-2026', date: '2026-01',
+      title: 'Significado esponsalicio del cuerpo',
+      blocks: [
+        ['li', 'Todos queremos ser amados, reconocidos, valorados… sin embargo no siempre nos sentimos así. Nos persigue a diario esa desazón, esa desconfianza. Pero, si estamos hechos para amar, ¿por qué cuesta tanto?'],
+        ['li', 'Volvamos, como siempre, al relato del Génesis. Estaban desnudos y no sentían vergüenza. No tenían miedo a ser rechazados; ambos con mirada limpia. En el origen éramos interiormente libres.'],
+        ['li', 'Esa desnudez del Génesis solo es posible cuando uno es libre: libre para controlar los vicios y libre al conseguir el autodominio. Entonces estaremos preparados para amar. Si no controlamos lo nuestro, ¿cómo nos entregamos a nuestro esposo?'],
+        ['li', 'En las pequeñas cosas vemos lo complicado del autodominio: un café para estar bien, comer antes de que te cuenten algo… los «peros» que nos ponemos todos los días y que nos impiden responder con amor, amar plenamente.'],
+        ['li', 'El significado esponsalicio del cuerpo es que está preparado para entregarse… a nuestro esposo. Totalmente en contra de lo que nos dice la sociedad actual: «mi cuerpo está para mis ojos».'],
+        ['li', 'En el origen, este autodominio y esta desnudez eran de fábrica. Ahora hemos de ponernos en camino. En el camino de purificación damos con nuestro vicio dominante. Veamos las situaciones diarias como oportunidades para crecer en virtudes.'],
+        ['li', 'Entregarme a Dios pasa por entregarme a mi esposo.'],
+        ['li', 'Y no solo es entregarse, sino también acoger: afirmar al otro, que sienta que también es amado por Dios, valorado, querido, y que no vengo yo aquí a cambiarlo. Es un don, un regalo, no una carga. De partida, Dios lo ama tal y como es. Luego, ¿quién soy yo para juzgarlo?'],
+        ['li', 'Con los criterios humanos, todo esto de la entrega y el acoger, tela marinera. De ahí la ayuda fundamental de la oración y los sacramentos.'],
+        ['li', 'El significado esponsalicio del cuerpo está deformado hoy en día, pero en el fondo del corazón sigue el deseo. Para conseguirlo: autodominio y orden, como Dios lo pensó en origen. Camino de purificación, oración y sacramentos. Con medios humanos, chungo. Necesitamos el amor de Dios. Para amarlo a Él, amemos al prójimo, a nuestro esposo. Y cuando lo amemos en la adversidad, más virtud, más amor, más como el amor de Dios.'],
+        ['li', 'El ser humano no será feliz si no nos vemos como un don. Donarse y acoger a nuestro esposo como un don, en los dos sentidos: mis carencias para reforzar sus virtudes, y sus virtudes para mejorar mis carencias.'],
+        ['call', 'El Caso', 'Les hace falta oración y resto de sacramentos. Si no, chungo.'],
+        ['call', 'Compromiso', 'Quitarnos de algún apego por ponernos al servicio de nuestro esposo.']
+      ]
+    },
+    {
+      id: 'dic-2025', date: '2025-12',
+      title: 'El hombre en el Jardín del Edén',
+      blocks: [
+        ['li', 'Importancia de conocer nuestros dones, bajo la premisa de que el hombre no está hecho para estar solo. En ese sentido, compartir los dones con nuestra ayuda adecuada y ser capaz de aceptar los suyos.'],
+        ['call', 'Ejercicio', [
+          'Explico, con mi esposa, ante Dios, por qué me sentiría solo si no la hubiera conocido, y qué de entregarme a ella me hace crecer.',
+          'Le explico a Dios, delante de mi esposa, qué valoro de que haya puesto a mi esposa como mi ayuda y qué le agradezco.'
+        ]],
+        ['li', 'Los conceptos de soledad y ayuda nos empujan a nuestro esposo, a nuestra ayuda adecuada.'],
+        ['li', 'Y con todo lo que tenemos, ¿por qué no somos felices? Pongamos en práctica la capacidad de amar y la capacidad de donar. Es la semejanza con Dios, lo que nos hace diferentes del resto de seres vivos.'],
+        ['li', 'Lo ponemos en práctica con nuestra ayuda adecuada: nos donamos y aceptamos los dones del otro. Comprendamos y actuemos entendiendo nuestras diferencias.'],
+        ['h', 'Es fundamental preguntarnos'],
+        ['ol', [
+          '¿Qué dones tenemos y cuáles no?',
+          '¿Qué dones tiene nuestra esposa y cuáles no?',
+          'Lo más complicado: aceptar que la carencia de uno se puede completar con el don del otro. El diablo pone egos, envidias y miedos para que no lo consigamos.',
+          'Tenemos la herramienta de la oración personal y la conyugal.'
+        ]]
+      ]
+    },
+    {
+      id: 'nov-2025', date: '2025-11',
+      title: 'El misterio de la creación: varón y mujer',
+      blocks: [
+        ['li', 'No se daban cuenta de que estaban desnudos. Se miraban como segundo yo, carne de su carne. No había ruptura entre lo sensible y lo espiritual. No necesitaban trabajar la oración, pues la tenían por sí misma. Se veían complementarios, con complementariedad de dones.'],
+        ['li', 'Aparece la vergüenza, con el miedo a cómo me mirarás tú. Y lo sé porque yo ya te miro a ti con turbidez.'],
+        ['li', 'Aquí estamos, anhelando esa situación primigenia, en la que Dios nos dona la creación, incluido nuestro esposo. Por eso nos donamos también nosotros a nuestro esposo, con nuestros dones. Se forma un triángulo a no olvidar: Dios y su creación, con los esposos y sus dones. Todo en comunión.'],
+        ['li', 'La desnudez originaria es lo que buscamos también. Nos tenemos que amar mejor, pasando por la entrega mutua en todos los sentidos y en todas las cruces del día a día. Cuanto más entrega, más intimidad y más revelación de cómo Dios ve a nuestro esposo: perfecto, pues lo creó y vio que era bueno. Aunque la mirada mundana nos impida verlo. De eso se trata, del esfuerzo que ahora hemos de hacer para limpiarnos las gafas.'],
+        ['li', 'Este cambio de mirada nos lo aporta Dios a través de la oración personal y conyugal. Es la mejor tienda de gafas que podemos encontrar (esto lo digo yo).'],
+        ['li', 'En el hombre de hoy hay un lío con lo que hay ahí fuera, con el mundo. Dejamos de vernos perfectos como Dios nos creó y lo mundano ocupa el lugar de Dios. Usamos su creación para nuestro egoísmo y no para acercarnos a Él.'],
+        ['li', 'Para evitarlo, no solo catequesis una vez al mes, sino todos los días estar en presencia de Dios, cultivar lo espiritual, la oración, etc. Es decir, necesitamos oración diaria y acompañamiento en la oración.'],
+        ['li', 'Todo esto es complicado de entender por nuestra mente concupiscente, pero así está la cosa. A quien algo quiere, algo le cuesta. Y nosotros hemos tenido la gracia de saber qué queremos y cuál es el camino.']
+      ]
+    },
+    {
+      id: 'oct-2025', date: '2025-10',
+      title: 'Catequesis 12. Desnudez originaria del hombre',
+      blocks: [
+        ['q', '«Los dos estaban desnudos, pero no sentían vergüenza el uno del otro».', 'Versículo en el que se centra la catequesis'],
+        ['li', 'Recordemos catequesis anteriores: ¿quiénes somos y a qué estamos llamados? El hombre pasa por distintos estados.'],
+        ['li', 'Nos adentramos en la situación de vergüenza, que aparece con el pecado. Es un estado posterior al originario.'],
+        ['li', 'Vergüenza es la emoción y el pudor es el sentimiento de vergüenza.'],
+        ['li', 'Antes del pecado no habían tenido vergüenza. La mirada limpia. Luz. Plena comunión entre los tres.'],
+        ['li', 'Con el pecado llegamos a un estado nuevo: «Se les abrieron los ojos a los dos y descubrieron que estaban desnudos… cuando oyeron la voz del Señor, se escondieron… cuando oí tu voz, tuve miedo, y me escondí».'],
+        ['li', 'El abrírseles los ojos significa un cambio de mirada; se miraron también a sí mismos. Y sintieron vergüenza de su propio cuerpo, dado que ¿cuál sería la mirada del otro hacia cada uno? Y se escondieron; sintieron la ruptura de comunión con Dios. No obstante, el Señor los llamó y los buscó para restaurar la armonía interior, como sigue haciendo, por cierto.'],
+        ['li', 'Ya en el hombre había nacido la vergüenza. Primero, la vergüenza herida, con el miedo a ser juzgados. Y segundo, una vergüenza como defensa, que nos separa cuando sentimos miedo, pero nos une cuando se convierte en pudor, para proteger la dignidad.'],
+        ['li', 'Ahí está la herramienta fundamental en el estado pecaminoso, dado que el pudor nos lleva nuevamente a la comunión.'],
+        ['li', 'Estamos llamados a pasar de la vergüenza al pudor, a través de la gracia. El pudor custodia el amor. El pudor protege al otro del deseo de uso. El pudor nos hace más humildes, fundamental para volver a esa mirada limpia.'],
+        ['h', 'Situaciones en que puede aparecer la vergüenza'],
+        ['dl', [
+          ['En la oración conyugal', 'Nos presentamos desnudos de alma ante Él. Si la vergüenza en ese momento no está sanada, la tenemos como impedimento. Es el muro del pecado. A través de la gracia lo llevamos al pudor, a la humildad.'],
+          ['En la confesión', 'También aparece la vergüenza, por miedo a ser juzgados. Pero si sanamos la vergüenza, encontraremos deseo de confesión.'],
+          ['En el abrazo conyugal', 'Con desnudez de cuerpo y alma, también podemos encontrar la vergüenza, con miedo a dar vida o a entregarnos totalmente. Pero cuando tenemos la vergüenza sanada, nos vamos a una sola carne.']
+        ]],
+        ['q', 'La vergüenza es la emoción que aparece en el estado de pecado; y el pudor es el escudo que nos protege de la vergüenza, y que aumentamos por la gracia.', 'En definitiva']
+      ]
+    },
+    {
+      id: 'sep-2025', date: '2025-09',
+      title: 'Catequesis 8. El significado de la unidad originaria del hombre',
+      blocks: [
+        ['li', 'De la soledad originaria (solo Adán, con Dios) a la unidad originaria, con Eva, en comunión.'],
+        ['li', 'Vivir en comunión, cuando no había pecado: nos veíamos limpios, complementarios, compartiendo sin intereses, reflejando como pareja al Señor en el mundo.'],
+        ['li', 'Antes de que llegue el pecado, los dos desnudos y sin vergüenza (Génesis 2,25). Es la desnudez originaria, el modo en que nos tratamos para llegar a esa comunión perfecta.'],
+        ['li', 'Pero en Génesis 3 se lio la cosa: pecado original. Mordieron del fruto prohibido. Sintieron vergüenza de sus cuerpos, de sus miserias. Se taparon. Incluso se ocultaron del Señor. Se enturbió su mirada.'],
+        ['li', 'La prehistoria teológica llega hasta el pecado original, hasta que se rompe la Primera Alianza. A partir de ahí comienza la historia teológica, con el pecado en nuestros corazones.'],
+        ['li', 'No obstante, el Señor, misericordioso, nos da soluciones para volver a esa mirada prehistórica, en el contexto de hoy, poniendo en práctica la oración y los sacramentos. Esa mirada que buscamos es entre esposos.'],
+        ['li', 'El espejo empañado representa las consecuencias del pecado: la mirada turbia, a raíz de la concupiscencia. El Señor nos ofrece las herramientas para limpiarlo y para empañarlo menos: sacramentos y oración.']
+      ]
+    },
+    {
+      id: 'jun-2025', date: '2025-06',
+      title: 'Catequesis 10. El significado de la unidad originaria del hombre',
+      sub: 'Diferencias entre hombre y mujer',
+      blocks: [
+        ['p', 'Tengámoslo claro y nos ayudará para llegar a una sola carne, a sus frutos, a la Mayor Fiesta de la Humanidad.'],
+        ['p', 'No se puede entender el concepto de persona si no entendemos al hombre y a la mujer, con sus diferencias, desde una perspectiva positiva. Ha de haber un encuentro entre los dos, una comunión. En ese encuentro podremos descubrirnos en la masculinidad para el hombre, o feminidad para la mujer. Encontrarán sus valores y sus dones, los de uno primero y los del cónyuge después. Pondrán por tanto en valor al otro, sin intentar someterlo ni cambiarlo, sino buscando el complemento inherente a esta situación, porque así lo ha previsto Dios.'],
+        ['p', 'De este modo, la unión del 1 + 1, de dos seres, no resulta en dos, sino que llegarán a conformar una figura mayor, una súper persona.'],
+        ['p', 'Como ejemplo, el Camino de Santiago no aporta lo mismo yendo solo que acompañado, tanto en el camino como en la meta. Si quieres ir rápido, ve solo; pero si quieres llegar lejos, ve acompañado.'],
+        ['p', 'Todo ello hila y, como cuestión indispensable, la unión conyugal mediante el abrazo conyugal. Con este último paso pasaríamos de la soledad originaria a la unidad originaria. Dios la ha puesto ahí para ello. Él pone los medios para sacarnos de la soledad (pensemos en el infierno, con la característica de soledad). Así, con la autodeterminación, elijamos, no como los animales, que no tienen esta cualidad. Insistiendo, donémonos el uno al otro. Conozcámonos en ese proceso, miremos las cosas con la mirada de la comunión y no desde nuestro individualismo.'],
+        ['p', 'Veremos ahí también el amor de Dios, nuestra dignidad. Somos lo que somos para el otro. Llegaremos a interiorizar una visión existencial de la vida: vivir para ayudar a los demás, en este caso a tu cónyuge, en lo más amplio de la expresión. Visto así, es una gracia de Dios cuando lo entendemos, cuando interiorizamos que nuestro cónyuge es el camino al Cielo. Por tanto, la Trinidad, esposos y Dios, como signo de unión conyugal.'],
+        ['p', 'Cada vez que se da el abrazo conyugal bajo estos sentimientos, en cuerpo y alma, es la bomba 💣🙏🏼🩷. El reflejo de la Santísima Trinidad, que además tiene el potencial de ser fecunda. Podemos, para ello, ayudarnos previamente de la Oración de Sara.'],
+        ['tags', 'Tres elementos para alcanzar el abrazo en plenitud', ['Intimidad', 'Pasión', 'Voluntad']],
+        ['p', 'Por tanto, en el matrimonio, efectivamente, huir de la soledad: ¡ay de quien ande solo!'],
+        ['p', 'En concreto, a la mujer Dios le ha dado la facultad de ser madre, pero, cuidado, no de forma individualista, sino con el hombre para que la complete.'],
+        ['q', 'Así, y solo así, llegaremos a entender y vivir el matrimonio como Dios lo pensó. Solo como esposos somos imagen y semejanza de Dios. Y el punto culminante de ello, con la intención prevista por Dios, es el abrazo conyugal.']
+      ]
+    },
+    {
+      id: 'may-2025-b', date: '2025-05',
+      title: 'Notas de las catequesis 1 a 9',
+      sub: 'Primer ciclo · 18/5/25',
+      blocks: [
+        ['dl', [
+          ['Catequesis 1', 'Con los fariseos, Cristo no entra en pormenores, sino que nos traslada a lo mayor, al principio, al Génesis. Una sola carne e indisolubilidad del matrimonio.'],
+          ['Catequesis 2', 'Relatos yahvista y elohísta. A imagen y semejanza de Dios. «Henchid la tierra», sí, pero según la ley de Dios. Procread: se nos da la facultad de ser cocreadores.'],
+          ['Catequesis 3', 'Introduce la inocencia originaria y el pecado original, que nos lleva a la naturaleza caída. Pero se nos exhorta a volver a la inocencia originaria.'],
+          ['Catequesis 4', 'Respuesta de Cristo a los fariseos sobre la indisolubilidad del matrimonio. Estamos en situación de naturaleza caída, de estado pecaminoso, pero podemos volver al estado de inocencia originaria a través de la redención. Teología del cuerpo.'],
+          ['Catequesis 5', 'El pecado es la pérdida de una gracia. Si pecamos de avaricia, perdemos generosidad, pero la podemos recuperar. Tenemos una alianza con Dios, con unos límites, que son las heridas que nosotros mismos nos vamos haciendo y que nos hacen perder nuestra dignidad. Tenemos la libertad que nos ha dado: autoconocimiento (con Dios) y autodeterminación. En la soledad originaria, recordar la oración de la Cruz. Invocar al Espíritu Santo.'],
+          ['Catequesis 6', 'Creados a imagen y semejanza de Dios. Henchid la tierra. Autoconocimiento y autodeterminación. Cristo ha dado su vida por mí, al igual que nuestro esposo. Es decir, la alianza de Dios con nosotros va en sintonía con la del matrimonio.'],
+          ['Catequesis 7', '¿Quiénes somos? Autoconocimiento. ¿Qué hacemos? Autodeterminación. Elige: muerte o vida, tierra o cielo, visible o invisible, lo mundano o Dios.'],
+          ['Catequesis 8', 'Relato bíblico de la creación de la mujer. El hombre precisa de su ayuda adecuada y lo detecta en el sopor. Soledad originaria, sopor y unidad originaria.'],
+          ['Catequesis 9', 'La creación no es 100 % hasta que no llegan hombre y mujer. Es la unidad a imagen y semejanza de Dios.']
+        ]]
+      ]
+    },
+    {
+      id: 'may-2025-a', date: '2025-05',
+      title: 'Claves de la catequesis 6',
+      sub: 'El hombre: de la soledad originaria al conocimiento a través del cual es persona',
+      blocks: [
+        ['ol', [
+          'Dios nos hace a su imagen.',
+          ['Nos da unas capacidades:', [
+            'Dominar la tierra: somos superiores al resto de la creación; también tenemos la capacidad de dominar el árbol de la ciencia del bien y del mal.',
+            'Autodeterminación: capacidad de decidir libre y voluntariamente.',
+            'Autoconocimiento.',
+            'Subjetividad: por la que interpretamos nuestra realidad.'
+          ]]
+        ]],
+        ['p', 'El amor que Dios tiene por cada uno de nosotros ha de ser sellado con una alianza. Dios me ama, me hace a su imagen, me hace cocreador. Jesús ha dado su vida por mí.'],
+        ['p', 'En la tierra, el único que me lo entrega todo (pasado, presente, futuro) es mi esposo/a. En esa decisión de entrega total hacemos una alianza, por la que nos sabemos amados.'],
+        ['call', 'Sobre la autodeterminación', 'Cuanto más pensamos en aquello que nos aleja de Dios (tentaciones), más difícil será resistirnos y no caer.'],
+        ['p', 'En el concepto de soledad originaria incluimos autoconocimiento y autodeterminación. Hombre creado a imagen de Dios, sujeto de la Alianza (constituido persona), a medida de «partner del Absoluto»; debe discernir y elegir (autodeterminación). El hombre está solo y queda en una relación exclusiva e irrepetible con Dios.'],
+        ['p', 'A través del cuerpo y del conocimiento podemos dominar la tierra, lo que nos diferencia del resto de la creación. Es una actividad específica de nuestra especie que forma parte de la definición de persona.']
+      ]
+    },
+    {
+      id: 'abr-2025', date: '2025-04',
+      title: 'Catequesis 1. Diálogo con Jesucristo sobre los fundamentos del matrimonio',
+      sub: 'Primer ciclo · Juan Pablo II, miércoles 5 de septiembre de 1979',
+      blocks: [
+        ['li', 'Analiza el Evangelio según Mt 19, en el que los fariseos preguntan a Cristo sobre el repudio a sus mujeres.'],
+        ['li', 'Cristo, que bien sabe lo que dice, aprovecha la ocasión. No se centra en el repudio, sino que se remite al principio.'],
+        ['li', 'Por un lado, para nosotros, está dando fe a todo lo relativo al Génesis sobre el hombre y la mujer, y lo está poniendo en valor. El texto del Génesis puede ser algo alegórico, pero Él, al reproducirlo y referirse a él, lo está explicando y trasladando su valor normativo según la voluntad de Dios.'],
+        ['li', 'Por otro, nos traslada que no centremos nuestras fuerzas ni nuestra atención en los problemas del matrimonio (le preguntan por el repudio y Él se va al principio), sino en las razones para amar y seguir la voluntad de Dios. Como al principio: «Por eso dejará el hombre a su padre y a su madre, y se unirá a su mujer, y vendrán a ser los dos una sola carne». E insiste: «De manera que ya no son dos, sino una sola carne. Por lo tanto, lo que Dios unió que no lo separe el hombre».'],
+        ['li', 'Con este «que no lo separe el hombre» nos traslada claramente el principio de la unidad y la indisolubilidad del matrimonio, siguiendo la Palabra de Dios.'],
+        ['li', 'Todo esto es fundamental y forma los cimientos de estas catequesis para nuestros matrimonios, ya que es el propio Cristo quien se refiere al «principio», en el que se revelan todas las premisas de unidad para el hombre y la mujer y del matrimonio como Dios lo pensó.'],
+        ['h', 'El matrimonio como Dios lo pensó'],
+        ['li', 'Es un don nacido del corazón de Dios. Pensemos en ello para no caer en nuestros problemas, sino en las leyes que Dios nos traslada al «principio» y que vienen reflejadas en el Génesis.'],
+        ['li', 'Leyes que nos aportan, por fin, el «Libro de instrucciones para el matrimonio».'],
+        ['li', 'El matrimonio es indisoluble. El «hombre» está creado a imagen y semejanza de Dios, y el matrimonio también. Es el culmen de su creación.'],
+        ['li', 'Hombre y mujer, creados con dignidad suficiente: la dignidad de ser a imagen y semejanza Suya. Nos damos el uno al otro, nos entregamos y acogemos, sabiendo que somos imagen y semejanza de Dios y que la unidad del matrimonio es el culmen de Su creación.'],
+        ['li', 'Es un amor de comunión que proviene de la propia Santísima Trinidad.'],
+        ['li', 'Nada tiene que ver con entregarnos el uno al otro bajo cualquier otra perspectiva, como la del simple pacto temporal de compartir nuestras vidas o hasta cuando sea.'],
+        ['q', 'Vivamos el matrimonio como Dios lo pensó.']
+      ]
+    },
+    {
+      id: 'mar-2025', date: '2025-03',
+      title: 'Catequesis 8. El relato bíblico de la creación de la mujer',
+      sub: 'Primer ciclo · 23/3/25',
+      blocks: [
+        ['p', 'El hombre es superior al resto de criaturas. Varón y mujer son dos encarnaciones del mismo «hombre» (ser humano) creado a imagen de Dios.'],
+        ['p', 'Proceso según el relato yahvista (el relato elohísta dice lo mismo, pero presenta a hombre y mujer creados a la vez):'],
+        ['dl', [
+          ['1. Soledad originaria', 'Creación del «hombre» (sin sexo aún). Está solo ante Dios. No es bueno que el hombre esté solo. La soledad es fundamental, pues en la ausencia, y solo ante Dios, se reconoce la necesidad de un complemento. A día de hoy, primero, oremos individualmente.'],
+          ['2. Sopor', 'Transición. Conversión. Se puede traer al día de hoy y se repite en el día a día: es cíclico. Parte de una confianza en Dios. Es un morir a nosotros mismos, una purificación de nuestro corazón concupiscente, es nuestra cruz, con dolor, es un perdón a Dios, y es reconocer la necesidad de ayuda, una renuncia a nuestro individualismo, confiando en Dios. Todo ello, preciso como paso previo a la unión. Es una renuncia paulatina a nuestro egoísmo.'],
+          ['3. Unidad originaria', 'Ayuda adecuada. Una sola carne. Venimos del «hombre» en la soledad originaria y, tras el sopor, llegan el «varón» y la «mujer», en una sola carne. Ambos con la misma dignidad, homogéneos, pero de sexos opuestos. Traído al día de hoy, responde, por ejemplo, al deseo de encontrar un ser semejante a nosotros, a las puertas del matrimonio, sin olvidar la confianza en Dios de que es a través de Él. En la unidad son ayuda adecuada, o complementaria, el uno del otro.']
+        ]],
+        ['p', 'Soledad, sopor y unidad están en un proceso, en un camino que se busca, se repite y se camina entre los esposos para vivir un matrimonio como Dios lo pensó.'],
+        ['call', 'El Caso', 'Hay un camino a recorrer, de renuncia, con la oración. Hemos de estar dispuestos a la renuncia total. Esta renuncia, con y para Dios, nos sana e incluso sanará el corazón de nuestro cónyuge.']
+      ]
+    },
+    {
+      id: 'feb-2025', date: '2025-02',
+      title: 'Alternativas: muerte e inmortalidad',
+      blocks: [
+        ['p', 'El hombre es el único ser que tiene estas alternativas. Cuerpo y alma. Visible e invisible. El alma aporta el autoconocimiento y la autodeterminación a los actos de tu cuerpo. El hombre tiene capacidad de dominar la tierra, dominar nuestro cuerpo, dominar nuestro comportamiento, y lo hace con las dos capacidades anteriores.'],
+        ['p', 'Pero, cuidado: somos libres. Tomemos la opción de Dios, no las apetencias del cuerpo, de lo visible, sino de lo invisible. Estamos llamados a lo eterno. Es un camino diario, una elección diaria entre las dos alternativas. ¿Lo visible o lo invisible? ¿Muerte o inmortalidad? Redes sociales, gomina en el pelo y fotos estupendas, pero el alma con telarañas.'],
+        ['p', 'De hecho, «si quieres conocer tu cuerpo, abre un puerco». En lo visible somos iguales, como cualquier otro animal. Luego, nos diferencia lo invisible.'],
+        ['p', 'Así, «aspirad a los carismas mejores». Estamos llamados a lo infinito. Tenemos el deseo de lo infinito, deseo del Cielo, de Dios. Pero, cuidado: si pretendemos copar este deseo con lo finito, nos volvemos adictos. Tampoco nos podemos olvidar de lo material, dado que vivimos en este mundo. Somos cristianos, no estoicos.'],
+        ['p', 'Por tanto, en este mundo visible, pongamos a Dios en medio. Seamos espejo. Y ánimo, que es complicado, porque tendemos a la mediocridad, a los placeres.'],
+        ['p', 'Cuanto más cerca de Dios, más cerca de lo invisible, más vivos. En sentido contrario, más en lo vano, más en lo mundano, más alejados de Él, más muertos.'],
+        ['p', 'Esta lucha se da también en el matrimonio. ¿Rezamos, pedimos ayuda a Dios, estamos encima de nuestro crecimiento espiritual y de nuestros hijos…?'],
+        ['q', 'Tierra o Cielo, mundo o gloria, muerte o vida.']
+      ]
+    },
+    {
+      id: 'ene-2025', date: '2025-01',
+      title: 'El hombre, de la soledad originaria al conocimiento a través del cual es persona',
+      sub: 'Catequesis de Juan Pablo II · miércoles 24 de octubre de 1979',
+      blocks: [
+        ['li', 'Miedo a la soledad frente al mundo. Pero tranquilos: Dios nos crea a su imagen y semejanza. Tenemos una alianza con Él. Nos da la mayor de las dignidades.'],
+        ['li', 'Se trata, por tanto, de autoconocimiento y autodeterminación.'],
+        ['li', 'Creados por amor, no nos pone condiciones en la alianza, pero sí unos límites: el árbol del bien y del mal. Cuidadín. ¿Cómo te conoces? ¿A la vista de tus circunstancias, con el demonio de por medio, o ante la mirada de Dios, según los dones que Él puso en nosotros, por amor?'],
+        ['li', 'La alianza de Dios con nosotros es fidelidad de Él hacia nosotros, como con el pueblo de Israel. Trasladado al matrimonio, en la alianza esponsal, lo mismo… al toro. («No hay amor más grande que el que da la vida por sus amigos».) En nuestra alianza conyugal firmamos un cheque en blanco. ¡Toma ya! Esto solo ocurre en el matrimonio, y con la ayuda de Dios.'],
+        ['li', 'En el matrimonio, acto de la voluntad, porque si caemos continuamente en los sentimientos… Y esto hila con la autodeterminación. ¿Qué queremos elegir? Somos libres. ¿Lo que nos apetece en cada momento? ¿El capricho del momento? Incluso llevándonoslo al nivel de necesidad (Freud). Relativismo: decido dependiendo de lo que hay fuera («si no me gustan mis principios, tengo otros»). O, por el contrario, pongo a Dios en medio (evangelio de hoy: «haced lo que Él os diga»).'],
+        ['h', 'En resumen'],
+        ['ol', [
+          'Primero, autoconocimiento a la luz de la oración, la dirección espiritual, los sacramentos, el Espíritu Santo…',
+          'Segundo, autodeterminación: voluntad, dar la vida por el otro, no seguir los criterios del mundo sino los de Dios. Cuidado con las dos tentaciones fundamentales: «lo siento, yo soy así», o «yo puedo amar y tirar pa\'lante sin Dios».'
+        ]]
+      ]
+    },
+    {
+      id: 'dic-2024', date: '2024-12',
+      title: 'Preparación para la Navidad',
+      blocks: [
+        ['p', 'En el Adviento nos preparamos para ir al mejor restaurante del país. Pero antes estamos comiendo en todos sitios, sin parar, de modo que cuando lleguemos, desde luego no le sacaremos el gusto a la comida. Oportunidad perdida.'],
+        ['p', 'Por tanto, de la multitud de aplicaciones de móvil que tiene nuestro corazón, desinstalemos unas cuantas.'],
+        ['h', 'Desinstalar'],
+        ['dl', [
+          ['Autosuficiencia', 'Me levanto pensando en mí.'],
+          ['Ruido', 'Imposible escuchar a nuestro corazón, a Dios, con este jaleo.'],
+          ['Desesperanza', 'No hay nada perdido. No tires la toalla.'],
+          ['Narcisismo', 'Todo lo que hago, todos los eventos en los que estoy, pensando en lo que digan de mí. Cuántos likes tengo.'],
+          ['Miedo', 'Hubo uno al que su amo le dio un talento y este lo enterró por miedo a perderlo.']
+        ]],
+        ['h', 'Instalar la aplicación de la conversión'],
+        ['dl', [
+          ['Tus ojos', '¿Cómo miras al prójimo? ¿A tu esposo? Fíjate en lo bueno y serás más feliz.'],
+          ['Del yo al nosotros', 'Toma las decisiones pensando en qué es mejor para nosotros. Hay que tener espíritu de pedestal: céntrate en elevar al otro. Cuanto mejor lo veas, cuanto más lo alabes, mejor.'],
+          ['Actitud activa', 'No seas pasivo. No esperes a que las cosas ocurran, sino ve a por ellas.']
+        ]],
+        ['p', 'Y cuando pongas al niño Jesús en el belén o lo veas en alguno, le preguntas qué quieres que me quede claro.'],
+        ['q', 'La conversión no es un LIKE, sino un ESCAPE y un ENTER.']
+      ]
+    },
+    {
+      id: 'nov-2024', date: '2024-11',
+      title: 'Catequesis 4. La respuesta de Cristo a los fariseos sobre la indisolubilidad del matrimonio',
+      blocks: [
+        ['p', 'San Mateo. Una sola carne. Lo que Dios unió que no lo separe el hombre. Por la dureza de corazón, Moisés sí permitió el repudio.'],
+        ['h', 'Varias ideas'],
+        ['li', 'En el inicio, inocencia y gracia. Pero a raíz de la manzana, estado pecaminoso.'],
+        ['li', 'Si Cristo se basa en el principio cuando responde a los fariseos, nos da esperanza, nos describe la redención. Es decir, nos anima a llegar al estado de inocencia originaria, al hombre y la mujer como una sola carne, al matrimonio como Dios lo pensó. Nos creó a imagen y semejanza de Él, y un matrimonio unido lo será tanto más.'],
+        ['li', 'Por tanto, Jesús nos traslada que es posible volver al principio, al matrimonio como Dios lo pensó, a vivir en la tierra un preludio de lo que será en el Cielo.'],
+        ['li', 'Tenemos una doble dimensión: estado de gracia de inocencia originaria, como al principio, y estado pecaminoso de gracia perdida. Al hilo de ello, podemos ver cómo tenemos en nuestro corazón un árbol del bien y del mal: dos contrapesos a los que podemos llegar.'],
+        ['li', 'Otra idea es la imagen del demonio como una serpiente, escurridiza, que con pequeñas mordidas puede ser letal en el matrimonio. Así actúa el demonio. (Como la explicación de Nefarius… esto lo digo yo.)'],
+        ['li', 'Muy interesante: no caer en la tendencia de quitarle importancia al pecado original. Al contrario, es fundamental. El propio Jesús se remite a él.'],
+        ['q', 'Esforcémonos, vamos buscando ya la santidad, no lo dejemos para mañana: el Cielo comienza aquí y ahora.']
+      ]
+    },
+    {
+      id: 'oct-2024-b', date: '2024-10',
+      title: 'Mensaje y recursos para la oración diaria',
+      blocks: [
+        ['p', 'El camino que proponen san Juan Pablo II (¡hoy es su fiesta!) y aterrizado por José Luis y Magüi empieza por vivir cada día esa «soledad originaria» (primer día del retiro): ¡cuánto me ama Dios!'],
+        ['p', 'Las lecturas de hoy nos recuerdan esa alianza que Dios hace con cada uno de nosotros, que nos hace hijos suyos por el bautismo en Cristo. ¡Tenemos que sentirnos sus hijos amados!'],
+        ['p', 'Recursos para hacer la oración diaria a la luz del Evangelio, que se hace verdad en cada uno de nosotros cada día:'],
+        ['links', [
+          ['Evangelio del día (Dominicos)', 'https://www.dominicos.org/predicacion/evangelio-del-dia/hoy/'],
+          ['Lectio divina (Carmelitas)', 'https://ocarm.org/en/prayer/lectiodivina'],
+          ['Proyecto Amor Conyugal', 'https://proyectoamorconyugal.es/']
+        ]]
+      ]
+    },
+    {
+      id: 'oct-2024-a', date: '2024-10',
+      title: 'Las 10 claves',
+      sub: 'La dureza de nuestro corazón nos impide andar el camino',
+      blocks: [
+        ['ol', [
+          'Dios ha de ser el centro de nuestra vida. Y si no lo es, actuemos como si lo fuera. Hay que buscarlo y, si no lo encuentras, sigue buscándolo. Debemos saber que Él nos ama y devolvérselo. Nuestra alma, que le da la vida al cuerpo, necesita del amor de Dios para vivir en plenitud. Esto brota de dentro; no es accesorio. Oración conyugal: hay que meterla en nuestro día. Dime qué, cómo y cuánto rezas y te diré quién eres. A orar se aprende orando.',
+          'Nuestro matrimonio, lo primero después de Dios, que es la fuente del resto de amores. Después mis hijos y, tras ello, el resto de mi familia. El demonio desordena todo. El matrimonio es camino de santidad. Donde está tu cabeza, está tu tesoro. ¿Está en tu cabeza el tesoro de tu cónyuge?',
+          'Fuera la sospecha del don de tu cónyuge hacia ti. El susurro en tu corazón sobre lo malo de tu esposo. Tu mirada está sucia, y entonces también el corazón. Muy atento a esto: la porquerilla del corazón. Es más, si solo veo a través de mi criterio, me estoy perdiendo la mitad de la vida. No soberbia. Cuanto más ame, más feliz. (Catequesis del 2 de septiembre del 79.)',
+          'El amor no se mide. No llevar las cuentas del otro. No lleva cuentas del mal.',
+          'Examen de la alegría en el matrimonio. No confundir con la diversión, que está fuera. La alegría viene de dentro, del Espíritu Santo. Y si no hay alegría entre nosotros, mira tu corazón. Puede que le estés echando la culpa a algo de fuera, pero está realmente dentro de tu corazón. Detalles diarios.',
+          'Sí a abrazar la cruz: amar cuando cuesta, en las pruebas, en las dificultades. Eso es lo que hace que el amor cueste. No es un amor humano, está claro, pero es el amor de Dios, y ahí está la cosa. Por eso Jesús lo hace sacramento: ahí pone la gracia para que podamos aplicarlo y, abrazando la cruz, vivamos el matrimonio a imagen de Dios. Hay que creerse que esto es así. Cuesta, pero es así. Morderse la lengua, no quejarse, como un entrenamiento: se sacan músculos en lo que cuesta, y lo mismo le pasa al corazón.',
+          'Siempre el perdón. Disculpándose. No seamos tampoco tan susceptibles. Sospecha de tu criterio, no del de tu esposo. ¿Quién pide perdón o perdona? El que más ama. El que más ama quiere acercar los corazones. Es habitual vender el amor de comunión por chorradas. Todo lo que separe nuestro corazón no es de Dios. Corazones unidos jamás serán vencidos.',
+          'Solos no podemos. ¡Catequesis y comunidad!',
+          'Persevera y vencerás. El que persevere salvará su alma. Paciencia. El matrimonio es un don y está por hacer. Es un camino, poco a poco. La inmediatez de esta cultura no ayuda.',
+          'Plan. Qué vamos a hacer para ponerlo en nuestra vida. Nuestro sí.'
+        ]]
+      ]
+    }
+  ];
+
+  const LEARN = {
+    'jun-2026': {
+      idea: 'Para amar hay que donarse, y para donarse hacen falta autodominio y la ayuda de Cristo.',
+      claves: ['La dignidad se pierde cuando no respondemos amando.', 'Dios dejó impresa en nuestro corazón la capacidad de donación; nuestra misión es descubrirla.', 'En el matrimonio la entrega es constante, sin condiciones ni utilitarismo.', 'Cuando debamos elegir: elige amar.'],
+      pensar: '¿Me entrego a mi esposo sin esperar nada a cambio?',
+      terms: ['don', 'autodominio', 'autoconocimiento']
+    },
+    'ene-2026': {
+      idea: 'El cuerpo está hecho para entregarse al esposo, y eso solo es posible con autodominio, oración y sacramentos.',
+      claves: ['En el origen éramos interiormente libres: desnudos y sin miedo a ser rechazados.', 'El autodominio se entrena en las pequeñas cosas de cada día.', 'Entregarse y también acoger: ver al esposo como un don, sin querer cambiarlo.', 'Con medios humanos no basta: necesitamos el amor de Dios.'],
+      pensar: '¿De qué apego puedo desprenderme esta semana para servir a mi esposo?',
+      terms: ['esponsalicio', 'autodominio', 'don', 'desnudez']
+    },
+    'dic-2025': {
+      idea: 'No estamos hechos para estar solos: mis carencias se completan con los dones de mi esposo, y los suyos con los míos.',
+      claves: ['Soledad y ayuda nos empujan hacia la ayuda adecuada.', 'Capacidad de amar y de donar: es la semejanza con Dios.', 'Hay que conocer los dones propios y los del cónyuge.', 'Lo más difícil: aceptar que mi carencia la completa su don.'],
+      pensar: '¿Qué don de mi esposa suple algo que a mí me falta?',
+      terms: ['ayuda', 'don', 'soledad']
+    },
+    'nov-2025': {
+      idea: 'Buscamos la mirada limpia del principio, y la oración es la mejor tienda de gafas para limpiarla.',
+      claves: ['Al principio se miraban como «segundo yo», sin ruptura entre lo sensible y lo espiritual.', 'Con la vergüenza aparece el miedo a cómo me mirará el otro.', 'Triángulo que no hay que olvidar: Dios y su creación, los esposos y sus dones.', 'Hace falta oración diaria, no solo una catequesis al mes.'],
+      pensar: '¿Veo hoy a mi esposo como lo ve Dios: perfecto, porque lo creó y vio que era bueno?',
+      terms: ['desnudez', 'verguenza', 'comunion', 'purificacion']
+    },
+    'oct-2025': {
+      idea: 'La vergüenza nace con el pecado; con la gracia se convierte en pudor, que protege el amor.',
+      claves: ['Antes del pecado: mirada limpia y comunión. Después: miedo y ocultarse.', 'Vergüenza herida (miedo a ser juzgados) frente a vergüenza como defensa, que se vuelve pudor.', 'El pudor custodia el amor, protege al otro del deseo de uso y hace humildes.', 'Puede aparecer en la oración conyugal, en la confesión y en el abrazo conyugal.'],
+      pensar: '¿En cuál de esas tres situaciones me cuesta más mostrarme tal como soy?',
+      terms: ['verguenza', 'pudor', 'desnudez', 'pecado']
+    },
+    'sep-2025': {
+      idea: 'Pasamos de estar solos con Dios a la unidad en comunión; el pecado empaña el espejo, y la oración y los sacramentos lo limpian.',
+      claves: ['Génesis 2,25: los dos desnudos y sin vergüenza.', 'Con el pecado se enturbió su mirada y se ocultaron del Señor.', 'La mirada limpia que buscamos es la que hay entre esposos.', 'El espejo empañado representa las consecuencias del pecado.'],
+      pensar: '¿Qué hago cada día para limpiar el espejo?',
+      terms: ['unidad', 'desnudez', 'pecado', 'concupiscencia']
+    },
+    'jun-2025': {
+      idea: 'Hombre y mujer, distintos y complementarios, forman juntos algo mayor; el abrazo conyugal es el culmen de esa unidad.',
+      claves: ['No se entiende la persona sin entender al hombre y a la mujer, con sus diferencias, en positivo.', 'Sin someter ni cambiar al otro: buscar el complemento.', '1 + 1 no es 2, sino una «súper persona».', 'Intimidad, pasión y voluntad para alcanzar el abrazo en plenitud.'],
+      pensar: '¿Qué valor de mi esposo he descubierto precisamente por ser distinto a mí?',
+      terms: ['unidad', 'ayuda', 'comunion']
+    },
+    'may-2025-b': {
+      idea: 'Resumen del primer ciclo (catequesis 1 a 9): del principio en el Génesis hasta la unidad de hombre y mujer.',
+      claves: ['Cristo nos remite al principio (catequesis 1 y 4).', 'Imagen y semejanza de Dios, y cocreadores (catequesis 2 y 6).', 'Inocencia originaria, pecado y naturaleza caída (catequesis 3 a 5).', 'Autoconocimiento, autodeterminación y creación de la mujer (catequesis 6 a 9).'],
+      pensar: '¿Cuál de estas catequesis me gustaría volver a leer con calma?',
+      terms: ['inocencia', 'pecado', 'autoconocimiento', 'autodeterminacion']
+    },
+    'may-2025-a': {
+      idea: 'Dios me hace a su imagen y me da capacidades; en la tierra, solo mi esposo me entrega todo en alianza.',
+      claves: ['Dios nos hace a su imagen y nos hace cocreadores.', 'Capacidades: dominar la tierra, autodeterminación, autoconocimiento y subjetividad.', 'Solo mi esposo/a me lo entrega todo: pasado, presente y futuro.', 'Cuanto más pensamos en las tentaciones, más difícil es resistirlas.'],
+      pensar: '¿En qué pienso más a menudo: en lo que me acerca a Dios o en lo que me aleja?',
+      terms: ['soledad', 'autodeterminacion', 'alianza', 'autoconocimiento']
+    },
+    'abr-2025': {
+      idea: 'Ante los fariseos, Cristo se remite al principio: el matrimonio como Dios lo pensó, un don indisoluble nacido de su corazón.',
+      claves: ['No centrar la atención en los problemas del matrimonio, sino en las razones para amar.', '«Lo que Dios unió que no lo separe el hombre»: unidad e indisolubilidad.', 'Cristo da valor normativo al Génesis.', 'Es un amor de comunión que proviene de la Santísima Trinidad.'],
+      pensar: '¿Estoy mirando los problemas de mi matrimonio o las razones para amar?',
+      terms: ['comunion', 'alianza', 'inocencia']
+    },
+    'mar-2025': {
+      idea: 'Soledad, sopor y unidad: un camino que se repite entre los esposos.',
+      claves: ['Soledad: solo ante Dios se reconoce la necesidad de un complemento.', 'Sopor: morir a nosotros mismos y renunciar al egoísmo confiando en Dios.', 'Unidad: varón y mujer, misma dignidad, ayuda adecuada el uno del otro.', 'El proceso es cíclico: se repite en el día a día.'],
+      pensar: '¿A qué parte de mi individualismo estoy dispuesto a renunciar hoy?',
+      terms: ['soledad', 'sopor', 'unidad', 'ayuda']
+    },
+    'feb-2025': {
+      idea: 'Cada día elegimos entre lo visible y lo invisible, entre la muerte y la inmortalidad.',
+      claves: ['El alma aporta autoconocimiento y autodeterminación a los actos del cuerpo.', 'Estamos llamados a lo infinito; llenar ese deseo con lo finito crea adicción.', 'Cristianos, no estoicos: no olvidar lo material.', 'Más cerca de Dios, más vivos; más en lo mundano, más muertos.'],
+      pensar: '¿Cuido más mi imagen visible o mi alma?',
+      terms: ['autoconocimiento', 'autodeterminacion']
+    },
+    'ene-2025': {
+      idea: 'Soy persona porque Dios me creó a su imagen: me conozco ante su mirada y elijo libremente.',
+      claves: ['Miedo a la soledad, pero Dios nos crea con una alianza y la mayor dignidad.', 'Autoconocimiento: ante la mirada de Dios, no según mis circunstancias.', 'En la alianza conyugal se firma un cheque en blanco.', 'Autodeterminación: voluntad, no capricho ni relativismo.'],
+      pensar: '¿Me conozco por mis circunstancias o por los dones que Dios puso en mí?',
+      terms: ['soledad', 'autoconocimiento', 'autodeterminacion', 'alianza']
+    },
+    'dic-2024': {
+      idea: 'En Adviento, desinstalar lo que estorba al corazón e instalar la conversión.',
+      claves: ['Desinstalar: autosuficiencia, ruido, desesperanza, narcisismo y miedo.', 'Instalar la conversión: tus ojos, del yo al nosotros, actitud activa.', 'Espíritu de pedestal: céntrate en elevar al otro.', 'La conversión no es un like, sino un escape y un enter.'],
+      pensar: '¿Cuál de las cinco aplicaciones desinstalo primero?'
+    },
+    'nov-2024': {
+      idea: 'Cristo, al remitirse al principio, nos da esperanza: es posible volver al matrimonio como Dios lo pensó.',
+      claves: ['Dos estados: inocencia y gracia originarias, y estado pecaminoso.', 'Tenemos en el corazón un árbol del bien y del mal.', 'El demonio, como una serpiente, muerde poco a poco y puede ser letal en el matrimonio.', 'La santidad no se deja para mañana: el Cielo comienza aquí y ahora.'],
+      pensar: '¿Qué estoy dejando para mañana en mi camino hacia la santidad?',
+      terms: ['inocencia', 'pecado']
+    },
+    'oct-2024-a': {
+      idea: 'Diez claves para seguir andando el camino a pesar de la dureza de nuestro corazón.',
+      claves: ['Dios, el centro; después, nuestro matrimonio.', 'Fuera la sospecha: limpiar la mirada sobre el cónyuge.', 'Abrazar la cruz y perdonar siempre.', 'Perseverar, con catequesis y comunidad, y con un plan concreto.'],
+      pensar: '¿Cuál de las diez claves será mi plan de este mes?'
+    },
+    'oct-2024-b': {
+      idea: 'El camino empieza cada día sintiéndonos hijos amados de Dios.',
+      claves: ['Vivir cada día la soledad originaria: ¡cuánto me ama Dios!', 'La alianza de Dios con cada uno nos hace hijos suyos por el bautismo.', 'Oración diaria a la luz del Evangelio.'],
+      pensar: '¿En qué momento de hoy voy a rezar con el Evangelio?',
+      terms: ['soledad', 'alianza']
+    }
+  };
+
+  const GLOSS = [
+    { id: 'alianza', name: 'Alianza', def: 'El amor de Dios por cada uno, sellado con fidelidad por su parte. En el matrimonio, la alianza conyugal es una entrega total, un cheque en blanco que solo se firma con la ayuda de Dios.', from: ['ene-2025', 'may-2025-a', 'abr-2025'] },
+    { id: 'autoconocimiento', name: 'Autoconocimiento', def: 'Saber quiénes somos. No según nuestras circunstancias, con el demonio de por medio, sino ante la mirada de Dios y según los dones que Él puso en nosotros. Se trabaja con la oración, la dirección espiritual y los sacramentos.', from: ['ene-2025', 'may-2025-b', 'jun-2026'] },
+    { id: 'autodeterminacion', name: 'Autodeterminación', def: 'La capacidad de decidir libre y voluntariamente. Elegimos a Dios, no el capricho del momento ni los criterios del mundo. Los animales no la tienen.', from: ['ene-2025', 'may-2025-a', 'feb-2025'] },
+    { id: 'autodominio', name: 'Autodominio', def: 'Control de los vicios y de uno mismo. Es la condición para poder donarse: si no controlamos lo nuestro, no podemos entregarnos al esposo. Se entrena en las pequeñas cosas de cada día.', from: ['ene-2026', 'jun-2026'] },
+    { id: 'ayuda', name: 'Ayuda adecuada', def: 'El esposo o la esposa como complemento: mis carencias refuerzan sus virtudes y sus virtudes mejoran mis carencias. Es la ayuda que Dios da al hombre, que no está hecho para estar solo.', from: ['mar-2025', 'dic-2025', 'jun-2025'] },
+    { id: 'comunion', name: 'Comunión', def: 'Amor que proviene de la Santísima Trinidad. Se forma un triángulo: Dios y su creación, con los esposos y sus dones, todo en comunión.', from: ['abr-2025', 'nov-2025', 'jun-2025'] },
+    { id: 'concupiscencia', name: 'Concupiscencia', def: 'Consecuencia del pecado: la mirada turbia, el espejo empañado, el corazón que hay que purificar. Hace complicado entender y vivir lo que Dios pensó.', from: ['sep-2025', 'mar-2025', 'nov-2025'] },
+    { id: 'desnudez', name: 'Desnudez originaria', def: 'Estar desnudos sin sentir vergüenza (Génesis 2,25): mirada limpia, interior libre. Es el modo en que nos tratamos para llegar a la comunión perfecta, y lo que buscamos recuperar entre esposos.', from: ['sep-2025', 'oct-2025', 'nov-2025'] },
+    { id: 'don', name: 'Don y donación', def: 'Capacidad de amar y de donarse, huella de Dios en el corazón y semejanza con Él. El esposo no es una carga sino un don que se acoge tal como es, porque Dios ya lo ama así.', from: ['dic-2025', 'ene-2026', 'jun-2026'] },
+    { id: 'esponsalicio', name: 'Significado esponsalicio del cuerpo', def: 'El cuerpo está preparado para entregarse al esposo. Va contra la idea actual de que «mi cuerpo está para mis ojos». Para vivirlo hacen falta autodominio y orden.', from: ['ene-2026'] },
+    { id: 'inocencia', name: 'Inocencia originaria', def: 'El estado de gracia del principio: desnudos sin vergüenza y con mirada limpia. Cristo nos anima a volver a él a través de la redención.', from: ['nov-2024', 'may-2025-b', 'abr-2025'] },
+    { id: 'pecado', name: 'Pecado original y naturaleza caída', def: 'El pecado es la pérdida de una gracia. Con el pecado original aparecen la vergüenza, la mirada turbia y la ruptura con Dios. Tenemos una doble dimensión: estado de gracia y estado pecaminoso.', from: ['nov-2024', 'sep-2025', 'may-2025-b'] },
+    { id: 'pudor', name: 'Pudor', def: 'La vergüenza transformada por la gracia. Es el escudo que nos protege de la vergüenza: custodia el amor, protege al otro del deseo de uso y nos hace más humildes.', from: ['oct-2025'] },
+    { id: 'purificacion', name: 'Camino de purificación', def: 'El camino diario para recuperar la mirada limpia: oración personal y conyugal, sacramentos y lucha contra el vicio dominante. Con medios solo humanos no basta; necesitamos el amor de Dios.', from: ['ene-2026', 'sep-2025', 'nov-2025'] },
+    { id: 'sopor', name: 'Sopor', def: 'La transición entre la soledad y la unidad. Es un morir a nosotros mismos: purificar el corazón, renunciar al individualismo y al egoísmo, confiando en Dios. Se repite en el día a día.', from: ['mar-2025'] },
+    { id: 'soledad', name: 'Soledad originaria', def: 'El hombre recién creado está solo ante Dios, sin sexo aún. Incluye autoconocimiento y autodeterminación. En esa ausencia reconoce que necesita un complemento.', from: ['mar-2025', 'ene-2025', 'may-2025-a'] },
+    { id: 'unidad', name: 'Unidad originaria', def: 'Varón y mujer, una sola carne: misma dignidad, sexos opuestos, ayuda adecuada el uno del otro. Con ella se sale de la soledad y se refleja a la Trinidad.', from: ['mar-2025', 'jun-2025', 'sep-2025'] },
+    { id: 'verguenza', name: 'Vergüenza', def: 'La emoción que aparece con el pecado: miedo a ser juzgados y a cómo me mirará el otro. Puede ser herida, o defensa que se convierte en pudor.', from: ['oct-2025', 'nov-2025'] }
+  ];
+
+  const PATH = [
+    { ph: 'Al principio', t: 'Soledad originaria', x: 'El hombre está solo ante Dios. Descubre quién es (autoconocimiento) y que puede elegir (autodeterminación). En esa ausencia reconoce que necesita un complemento.', terms: ['soledad', 'autoconocimiento', 'autodeterminacion'], ses: ['ene-2025', 'may-2025-a', 'mar-2025'] },
+    { ph: 'Al principio', t: 'Sopor', x: 'Transición: morir a nosotros mismos, purificar el corazón y renunciar al egoísmo, confiando en Dios.', terms: ['sopor'], ses: ['mar-2025'] },
+    { ph: 'Al principio', t: 'Unidad originaria', x: 'Varón y mujer, una sola carne, con la misma dignidad y como ayuda adecuada el uno del otro. Desnudos y sin vergüenza, con mirada limpia.', terms: ['unidad', 'ayuda', 'desnudez', 'inocencia'], ses: ['mar-2025', 'jun-2025', 'sep-2025', 'nov-2025'] },
+    { ph: 'La ruptura', t: 'Pecado original', x: 'Se enturbia la mirada: aparecen la vergüenza, el miedo a ser juzgados y la ruptura de la comunión con Dios.', terms: ['pecado', 'verguenza', 'concupiscencia'], ses: ['nov-2024', 'sep-2025', 'oct-2025'] },
+    { ph: 'El camino de vuelta', t: 'De la vergüenza al pudor', x: 'Por la gracia, la vergüenza se vuelve pudor. Oración personal y conyugal, sacramentos y autodominio limpian la mirada.', terms: ['pudor', 'autodominio', 'purificacion'], ses: ['oct-2025', 'nov-2025', 'ene-2026'] },
+    { ph: 'La meta', t: 'Donación y comunión', x: 'Entregarse y acoger al esposo como un don, sin condiciones. Es el reflejo de la Trinidad y el camino a la santidad en el matrimonio.', terms: ['don', 'comunion', 'alianza', 'esponsalicio'], ses: ['abr-2025', 'ene-2026', 'jun-2026'] }
+  ];
+
+  const CARDS = [
+    { q: '¿Qué es la soledad originaria?', a: 'El hombre recién creado está solo ante Dios, sin sexo aún. En esa ausencia reconoce que necesita un complemento. Incluye autoconocimiento y autodeterminación.', s: 'mar-2025' },
+    { q: '¿Qué es el sopor?', a: 'La transición entre soledad y unidad: un morir a nosotros mismos, una purificación del corazón y una renuncia al egoísmo, confiando en Dios. Se repite en el día a día.', s: 'mar-2025' },
+    { q: '¿Qué es la unidad originaria?', a: 'Varón y mujer en una sola carne, con la misma dignidad pero sexos opuestos, como ayuda adecuada el uno del otro.', s: 'mar-2025' },
+    { q: '¿Qué dos capacidades nos hacen personas ante Dios?', a: 'El autoconocimiento (quién soy) y la autodeterminación (decidir libre y voluntariamente).', s: 'ene-2025' },
+    { q: '¿Qué dos tentaciones fundamentales amenazan la autodeterminación?', a: '«Lo siento, yo soy así» y «yo puedo amar y tirar pa\'lante sin Dios».', s: 'ene-2025' },
+    { q: '¿Qué firmamos en la alianza conyugal?', a: 'Un cheque en blanco. Solo ocurre en el matrimonio y con la ayuda de Dios.', s: 'ene-2025' },
+    { q: '¿Por qué Cristo responde a los fariseos remitiéndose al principio?', a: 'Para centrarnos en las razones para amar, no en los problemas del matrimonio, y dar valor normativo al Génesis: el matrimonio como Dios lo pensó.', s: 'abr-2025' },
+    { q: '¿Qué nos enseña «lo que Dios unió que no lo separe el hombre»?', a: 'La unidad y la indisolubilidad del matrimonio, siguiendo la Palabra de Dios.', s: 'abr-2025' },
+    { q: '¿Qué tres elementos hacen falta para alcanzar el abrazo en plenitud?', a: 'Intimidad, pasión y voluntad.', s: 'jun-2025' },
+    { q: '¿Qué representa el espejo empañado?', a: 'Las consecuencias del pecado: la mirada turbia a raíz de la concupiscencia. La oración y los sacramentos sirven para limpiarlo.', s: 'sep-2025' },
+    { q: '¿Qué diferencia hay entre vergüenza y pudor?', a: 'La vergüenza es la emoción que aparece con el pecado. El pudor es el escudo que nos protege de ella, y lo aumentamos por la gracia.', s: 'oct-2025' },
+    { q: '¿Qué hace el pudor?', a: 'Custodia el amor, protege al otro del deseo de uso y nos hace más humildes, algo fundamental para volver a la mirada limpia.', s: 'oct-2025' },
+    { q: '¿En qué tres situaciones puede aparecer la vergüenza?', a: 'En la oración conyugal, en la confesión y en el abrazo conyugal.', s: 'oct-2025' },
+    { q: '¿Qué dice el triángulo que no hay que olvidar?', a: 'Dios y su creación, con los esposos y sus dones: todo en comunión.', s: 'nov-2025' },
+    { q: '¿Qué dos capacidades ponemos en práctica con nuestra ayuda adecuada?', a: 'Capacidad de amar y capacidad de donar: es la semejanza con Dios.', s: 'dic-2025' },
+    { q: '¿Qué significa el significado esponsalicio del cuerpo?', a: 'Que el cuerpo está preparado para entregarse al esposo. Va contra la idea de que «mi cuerpo está para mis ojos».', s: 'ene-2026' },
+    { q: '¿Cómo hay que acoger al esposo?', a: 'Como un don, no como una carga, y sin pretender cambiarlo: Dios lo ama tal y como es.', s: 'ene-2026' },
+    { q: '¿Por qué necesito autodominio para amar?', a: 'Porque no me puedo donar si no me controlo.', s: 'jun-2026' },
+    { q: 'Cuando debamos elegir, ¿qué elegimos?', a: 'AMAR.', s: 'jun-2026' },
+    { q: 'En Adviento, ¿qué cinco «aplicaciones» hay que desinstalar?', a: 'Autosuficiencia, ruido, desesperanza, narcisismo y miedo. Se instala la conversión: tus ojos, del yo al nosotros y actitud activa.', s: 'dic-2024' }
+  ];
+
+  CARDS.push(
+    { q: 'Si estamos hechos para amar, ¿por qué cuesta tanto?', a: 'Hay que volver al Génesis: en el origen estaban desnudos y no sentían vergüenza, sin miedo a ser rechazados. Éramos interiormente libres.', s: 'ene-2026' },
+    { q: '¿Cuándo es posible la desnudez del Génesis?', a: 'Solo cuando uno es libre: libre para controlar los vicios y libre al conseguir el autodominio.', s: 'ene-2026' },
+    { q: '¿Qué ejemplos pequeños muestran lo complicado del autodominio?', a: 'Un café para estar bien, comer antes de que te cuenten algo, los «peros» de cada día que nos impiden responder con amor.', s: 'ene-2026' },
+    { q: '¿Cómo se recorre el camino de purificación?', a: 'Dando con nuestro vicio dominante y viendo las situaciones diarias como oportunidades para crecer en virtudes, con oración y sacramentos.', s: 'ene-2026' },
+    { q: '¿Cuál fue el compromiso de enero de 2026?', a: 'Quitarnos de algún apego por ponernos al servicio de nuestro esposo.', s: 'ene-2026' },
+    { q: '¿En qué consiste el ejercicio de diciembre de 2025?', a: 'A) Explico, con mi esposa y ante Dios, por qué me sentiría solo si no la hubiera conocido y qué de entregarme a ella me hace crecer. B) Le explico a Dios, delante de mi esposa, qué valoro de que la haya puesto como mi ayuda y qué le agradezco.', s: 'dic-2025' },
+    { q: '¿Qué nos diferencia del resto de seres vivos?', a: 'La capacidad de amar y la capacidad de donar: es la semejanza con Dios.', s: 'dic-2025' },
+    { q: '¿Qué pone el diablo para que no aceptemos que el don del otro completa mi carencia?', a: 'Egos, envidias y miedos. Tenemos la herramienta de la oración personal y la conyugal.', s: 'dic-2025' },
+    { q: '¿Cómo se miraban Adán y Eva en el origen?', a: 'Como segundo yo, carne de su carne. No había ruptura entre lo sensible y lo espiritual.', s: 'nov-2025' },
+    { q: '¿Por qué la oración es «la mejor tienda de gafas»?', a: 'Porque nos cambia la mirada y nos ayuda a ver a nuestro esposo como lo ve Dios.', s: 'nov-2025' },
+    { q: '¿Cómo ve Dios a nuestro esposo?', a: 'Perfecto, pues lo creó y vio que era bueno. La mirada mundana nos impide verlo.', s: 'nov-2025' },
+    { q: '¿Por qué no basta una catequesis al mes?', a: 'Porque hace falta estar en presencia de Dios todos los días: oración diaria y acompañamiento en la oración.', s: 'nov-2025' },
+    { q: '¿Qué versículo centra la catequesis 12?', a: '«Los dos estaban desnudos, pero no sentían vergüenza el uno del otro».', s: 'oct-2025' },
+    { q: '¿Qué dos tipos de vergüenza hay?', a: 'La vergüenza herida, con miedo a ser juzgados, y la vergüenza como defensa, que separa cuando sentimos miedo pero une cuando se convierte en pudor.', s: 'oct-2025' },
+    { q: '¿Qué pasa en la confesión si sanamos la vergüenza?', a: 'Encontraremos deseo de confesión.', s: 'oct-2025' },
+    { q: '¿Qué pasa en el abrazo conyugal cuando la vergüenza está sanada?', a: 'Nos vamos a una sola carne, sin miedo a dar vida ni a entregarnos totalmente.', s: 'oct-2025' },
+    { q: '¿Qué es la prehistoria teológica?', a: 'El tiempo hasta el pecado original, hasta que se rompe la Primera Alianza. Después comienza la historia teológica, con el pecado en nuestros corazones.', s: 'sep-2025' },
+    { q: '¿Qué dice Génesis 2,25?', a: 'Que los dos estaban desnudos y sin vergüenza. Es la desnudez originaria.', s: 'sep-2025' },
+    { q: '¿Qué resulta de unir 1 + 1 en el matrimonio?', a: 'No resultan dos, sino una figura mayor, una «súper persona».', s: 'jun-2025' },
+    { q: '¿Qué enseña el ejemplo del Camino de Santiago?', a: 'Si quieres ir rápido, ve solo; pero si quieres llegar lejos, ve acompañado.', s: 'jun-2025' },
+    { q: '¿Cómo ha de vivir la mujer la facultad de ser madre?', a: 'No de forma individualista, sino con el hombre para que la complete.', s: 'jun-2025' },
+    { q: '¿Qué oración ayuda a prepararse para el abrazo conyugal?', a: 'La Oración de Sara.', s: 'jun-2025' },
+    { q: '¿Qué cuatro capacidades nos da Dios según la catequesis 6?', a: 'Dominar la tierra, autodeterminación, autoconocimiento y subjetividad.', s: 'may-2025-a' },
+    { q: '¿Qué pasa cuanto más pensamos en las tentaciones?', a: 'Más difícil es resistirnos y no caer.', s: 'may-2025-a' },
+    { q: 'Si pecamos de avaricia, ¿qué perdemos?', a: 'La generosidad. El pecado es la pérdida de una gracia, pero la podemos recuperar.', s: 'may-2025-b' },
+    { q: '¿Cuándo está completa la creación según la catequesis 9?', a: 'Cuando llegan hombre y mujer: es la unidad a imagen y semejanza de Dios.', s: 'may-2025-b' },
+    { q: '¿Qué ocurre si copamos el deseo de infinito con cosas finitas?', a: 'Nos volvemos adictos. Pero tampoco hay que olvidar lo material: somos cristianos, no estoicos.', s: 'feb-2025' },
+    { q: '¿Qué es el espíritu de pedestal?', a: 'Centrarse en elevar al otro: cuanto mejor lo veas y más lo alabes, mejor.', s: 'dic-2024' },
+    { q: 'En la parábola del talento, ¿por qué lo enterró?', a: 'Por miedo.', s: 'dic-2024' },
+    { q: '¿Por qué permitió Moisés el repudio?', a: 'Por la dureza de corazón.', s: 'nov-2024' },
+    { q: '¿Qué imagen se da del demonio en la catequesis 4?', a: 'Una serpiente escurridiza que, con pequeñas mordidas, puede ser letal en el matrimonio.', s: 'nov-2024' },
+    { q: '¿Qué orden de prioridades marcan las 10 claves?', a: 'Dios primero; después nuestro matrimonio; luego los hijos y, tras ellos, el resto de la familia.', s: 'oct-2024-a' },
+    { q: '¿Quién pide perdón o perdona?', a: 'El que más ama, porque quiere acercar los corazones.', s: 'oct-2024-a' },
+    { q: '¿En qué se diferencian la alegría y la diversión?', a: 'La alegría viene de dentro, del Espíritu Santo; la diversión está fuera.', s: 'oct-2024-a' },
+    { q: '¿Por qué decir sí a abrazar la cruz?', a: 'Porque amar cuando cuesta es el amor de Dios. Jesús lo hace sacramento y pone la gracia. Es como un entrenamiento: se sacan músculos en lo que cuesta.', s: 'oct-2024-a' }
+  );
+
+  /* Sesiones añadidas después de la primera versión. Cada una: id, date (AAAA-MM-DD), title, idea, claves[], pensar, terms[], text (las notas), added (fecha en que se añadió). */
+  const NEW = [];
+
+
+  const MES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const AB = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const INI = ['E','F','M','A','M','J','J','A','S','O','N','D'];
+  const $ = (id) => document.getElementById(id);
+  const esc = (t) => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const LS = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  };
+  const reviewed = new Set(LS.get('pac.reviewed', []));
+  const known = new Set(LS.get('pac.known', []));
+  let my = LS.get('pac.my', {});
+  let drafts = LS.get('pac.drafts', []);
+  let editor = !!LS.get('pac.editor', false);
+  const saveMy = () => LS.set('pac.my', my);
+  const saveDrafts = () => LS.set('pac.drafts', drafts);
+
+  function fold(s) {
+    let out = '';
+    for (let i = 0; i < s.length; i++) {
+      const c = s[i];
+      let f = c.normalize('NFD')[0] || c;
+      f = f.toLowerCase();
+      out += f.length === 1 ? f : c;
+    }
+    return out;
+  }
+  function hl(t, q) {
+    if (!q) return esc(t);
+    const ft = fold(t), fq = fold(q);
+    let out = '', pos = 0, i;
+    while (fq && (i = ft.indexOf(fq, pos)) !== -1) {
+      out += esc(t.slice(pos, i)) + '<mark>' + esc(t.slice(i, i + fq.length)) + '</mark>';
+      pos = i + fq.length;
+    }
+    return out + esc(t.slice(pos));
+  }
+  const words = (s) => (String(s).match(/\S+/g) || []).length;
+  function flat(b) {
+    switch (b[0]) {
+      case 'p': case 'li': case 'h': return b[1];
+      case 'ol': return b[1].map((x) => Array.isArray(x) ? x[0] + ' ' + x[1].join(' ') : x).join(' ');
+      case 'call': return b[1] + ' ' + (Array.isArray(b[2]) ? b[2].join(' ') : b[2]);
+      case 'q': return b[1] + ' ' + (b[2] || '');
+      case 'dl': return b[1].map((x) => x[0] + ' ' + x[1]).join(' ');
+      case 'tags': return b[1] + ' ' + b[2].join(' ');
+      case 'links': return b[1].map((x) => x[0]).join(' ');
+    }
+    return '';
+  }
+  function textToBlocks(t) {
+    const out = [];
+    String(t || '').split(/\r?\n/).forEach((raw) => {
+      const line = raw.trim();
+      if (!line) return;
+      const m = line.match(/^([.\-•*]|\d+[.)])\s+(.*)$/) || line.match(/^([.\-•*])(\S.*)$/);
+      if (m) out.push(['li', m[2]]); else out.push(['p', line]);
+    });
+    return out;
+  }
+
+  /* ---------- Estado ---------- */
+  const glossById = {};
+  GLOSS.forEach((g) => { glossById[g.id] = g; });
+  const S = { tab: 'inicio', sid: null, q: '', filter: 'todas', month: null, from: 'inicio', scroll: {}, cq: '', confirm: null };
+  let items = [], byId = {}, real = [];
+
+  function parts(date) { const p = date.split('-'); return { y: +p[0], m: +p[1] - 1 }; }
+  function dateLabel(e) { const p = parts(e.date); return (e.day ? +e.day + ' ' : '') + AB[p.m] + ' ' + p.y; }
+  function lead(e) {
+    if (e.idea) return e.idea;
+    const b = (e.blocks || []).find((x) => x[0] === 'p' || x[0] === 'li' || x[0] === 'q');
+    return b ? b[1] : '';
+  }
+  function fromRaw(d, src, i) {
+    const ds = String(d.date || '');
+    const month = /^\d{4}-\d{2}/.test(ds) ? ds.slice(0, 7) : new Date().toISOString().slice(0, 7);
+    const day = /^\d{4}-\d{2}-\d{2}$/.test(ds) ? ds.slice(8) : null;
+    return {
+      id: d.id, src: src, seq: 1000 + i, date: month, day: day, key: month + '-' + (day || '01'),
+      title: d.title || 'Sesión sin título', sub: d.sub || '', idea: d.idea || '',
+      claves: Array.isArray(d.claves) ? d.claves : [], pensar: d.pensar || '',
+      terms: (Array.isArray(d.terms) ? d.terms : []).filter((t) => glossById[t]),
+      raw: d.text || '', blocks: textToBlocks(d.text || ''), added: d.added || ''
+    };
+  }
+  function build() {
+    const seed = E.map((e, i) => Object.assign({ seq: i, src: 'seed', key: e.date + '-00' }, e, LEARN[e.id] || {}));
+    const added = NEW.map((d, i) => fromRaw(d, 'new', i)).concat(drafts.map((d, i) => fromRaw(d, 'draft', 500 + i)));
+    items = seed.concat(added);
+    items.forEach((e) => {
+      if (e.gap) { e.hay = fold(e.title + ' ' + e.text); e.body = ''; return; }
+      e.body = (e.blocks || []).map(flat).join(' ');
+      e.hay = fold([e.title, e.sub || '', e.idea || '', (e.claves || []).join(' '), e.pensar || '', e.body].join(' '));
+      e.mins = Math.max(1, Math.round(words(e.body) / 200));
+      e.sw = words((e.idea || '') + ' ' + (e.claves || []).join(' '));
+    });
+    items.sort((a, b) => a.key < b.key ? -1 : a.key > b.key ? 1 : b.seq - a.seq);
+    byId = {};
+    items.forEach((e) => { byId[e.id] = e; });
+    real = items.filter((e) => !e.gap);
+  }
+  const sumTime = (e) => e.sw <= 110 ? '30 s' : '1 min';
+
+  function pool() {
+    const out = CARDS.map((c, i) => ({ k: i, q: c.q, a: c.a, s: c.s }));
+    real.forEach((e) => { if (e.idea) out.push({ k: 'i:' + e.id, q: '¿Cuál es la idea central de «' + e.title + '»?', a: e.idea, s: e.id }); });
+    return out.filter((c) => byId[c.s]);
+  }
+
+  /* ---------- Piezas de HTML ---------- */
+  function renderOl(list, q) {
+    return '<ol>' + list.map((x) => Array.isArray(x)
+      ? '<li>' + hl(x[0], q) + '<ul>' + x[1].map((s) => '<li>' + hl(s, q) + '</li>').join('') + '</ul></li>'
+      : '<li>' + hl(x, q) + '</li>').join('') + '</ol>';
+  }
+  function renderOne(b, q) {
+    switch (b[0]) {
+      case 'p': return '<p>' + hl(b[1], q) + '</p>';
+      case 'h': return '<h4>' + hl(b[1], q) + '</h4>';
+      case 'ol': return renderOl(b[1], q);
+      case 'call': return '<aside class="call"><b>' + hl(b[1], q) + '</b>' + (Array.isArray(b[2]) ? '<ol>' + b[2].map((s) => '<li>' + hl(s, q) + '</li>').join('') + '</ol>' : '<p>' + hl(b[2], q) + '</p>') + '</aside>';
+      case 'q': return '<blockquote><p>' + hl(b[1], q) + '</p>' + (b[2] ? '<cite>' + hl(b[2], q) + '</cite>' : '') + '</blockquote>';
+      case 'dl': return '<dl>' + b[1].map((x) => '<div><dt>' + hl(x[0], q) + '</dt><dd>' + hl(x[1], q) + '</dd></div>').join('') + '</dl>';
+      case 'tags': return '<div class="tags"><span class="tl">' + hl(b[1], q) + '</span>' + b[2].map((t) => '<span class="tg">' + hl(t, q) + '</span>').join('') + '</div>';
+      case 'links': return '<ul class="links">' + b[1].map((x) => {
+        let host = ''; try { host = new URL(x[1]).hostname.replace(/^www\./, ''); } catch (e) {}
+        return '<li><a href="' + esc(x[1]) + '" target="_blank" rel="noopener">' + esc(x[0]) + '</a><span class="u">' + esc(host) + '</span></li>';
+      }).join('') + '</ul>';
+    }
+    return '';
+  }
+  function renderBlocks(bl, q) {
+    let out = '', i = 0;
+    while (i < bl.length) {
+      if (bl[i][0] === 'li') {
+        let li = '';
+        while (i < bl.length && bl[i][0] === 'li') { li += '<li>' + hl(bl[i][1], q) + '</li>'; i++; }
+        out += '<ul>' + li + '</ul>';
+      } else { out += renderOne(bl[i], q); i++; }
+    }
+    return out;
+  }
+  function sesChips(ids) {
+    return ids.filter((id) => byId[id]).map((id) => '<button type="button" class="chip s" data-open="' + id + '">' + esc(dateLabel(byId[id])) + '</button>').join('');
+  }
+  function termChips(ids) {
+    return ids.filter((t) => glossById[t]).map((t) => '<button type="button" class="chip" data-term="' + t + '">' + esc(glossById[t].name) + '</button>').join('');
+  }
+  function snippet(e, q) {
+    const fq = fold(q), ft = fold(e.body), i = ft.indexOf(fq);
+    if (i < 0) return '';
+    const a = Math.max(0, i - 50), b = Math.min(e.body.length, i + fq.length + 70);
+    return (a > 0 ? '…' : '') + hl(e.body.slice(a, b), q) + (b < e.body.length ? '…' : '');
+  }
+  function isRecent(e) {
+    if (e.src !== 'new' || !e.added) return false;
+    return Date.now() - new Date(e.added).getTime() < 21 * 864e5;
+  }
+  function row(e, q) {
+    const p = parts(e.date), done = reviewed.has(e.id), m = my[e.id];
+    const inHead = q && (fold(e.title + ' ' + (e.idea || '')).indexOf(fold(q)) !== -1);
+    const sub = q && !inHead ? snippet(e, q) : esc(lead(e));
+    return '<button type="button" class="row" data-open="' + e.id + '"><span class="d"><b>' + (e.day ? +e.day + ' ' : '') + AB[p.m] + '</b>' + p.y + '</span>' +
+      '<span><span class="t">' + hl(e.title, q) + (isRecent(e) ? '<span class="new">Nueva</span>' : '') + (e.src === 'draft' ? '<span class="new">Borrador</span>' : '') + '</span><span class="s">' + sub + '</span></span>' +
+      '<span class="r">' + (done ? '<span class="tick" title="Repasada">✓</span>' : '') + (m && (m.note || m.comp) ? '<span class="dot" title="Tienes una nota"></span>' : '') + '</span></button>';
+  }
+
+  /* ---------- Calendario ---------- */
+  function calendarHtml() {
+    const status = {};
+    items.forEach((e) => {
+      if (e.gap) Object.keys(e.months).forEach((k) => { status[k] = { s: e.months[k], ids: [] }; });
+      else { (status[e.date] = status[e.date] && status[e.date].s === 'ok' ? status[e.date] : { s: 'ok', ids: [] }).ids.push(e.id); }
+    });
+    const minY = parts(items[0].date).y, now = new Date(), maxY = Math.max(parts(items[items.length - 1].date).y, now.getFullYear());
+    const nowKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+    let h = '<div class="grid"><span></span>' + INI.map((c, i) => '<span class="mh" title="' + MES[i] + '">' + c + '</span>').join('');
+    for (let y = minY; y <= maxY; y++) {
+      h += '<span class="y">' + y + '</span>';
+      for (let m = 0; m < 12; m++) {
+        const key = y + '-' + String(m + 1).padStart(2, '0'), s = status[key], nm = MES[m] + ' ' + y, cur = key === nowKey ? ' now' : '';
+        if (!s) { h += '<span class="cell' + cur + '" title="' + nm + '"></span>'; continue; }
+        if (s.s !== 'ok') { h += '<span class="cell ' + s.s + cur + '" title="' + nm + ': ' + (s.s === 'sin' ? 'sin resumen' : 'no hubo catequesis') + '"></span>'; continue; }
+        const n = s.ids.length, lab = nm + ': ' + (n > 1 ? n + ' sesiones' : '1 sesión');
+        h += n === 1
+          ? '<button type="button" class="cell ok' + cur + '" data-open="' + s.ids[0] + '" title="' + lab + '" aria-label="' + lab + '"></button>'
+          : '<button type="button" class="cell ok multi' + cur + '" data-month="' + key + '" title="' + lab + '" aria-label="' + lab + '">' + n + '</button>';
+      }
+    }
+    return h + '</div><div class="legend" aria-hidden="true"><span><i style="background:var(--accent)"></i>Con resumen</span><span><i style="border:1.5px dashed var(--accent)"></i>Sin resumen</span><span><i style="background:repeating-linear-gradient(135deg,var(--line) 0 3px,transparent 3px 7px);border:1px solid var(--line)"></i>No hubo</span></div>';
+  }
+  const calBox = () => '<section class="calbox"><h3>Calendario · toca un mes</h3>' + calendarHtml() + '</section>';
+
+  /* ---------- Vistas ---------- */
+  function renderTop() {
+    $('top').innerHTML = '<div class="brand"><small>Catequesis PAC</small>Teología del cuerpo</div>' +
+      (editor ? '<div class="acts"><button type="button" class="btn" data-act="drafts">Borradores' + (drafts.length ? ' (' + drafts.length + ')' : '') + '</button><button type="button" class="btn primary" data-act="new">+ Nueva</button></div>' : '');
+  }
+
+  function renderHome() {
+    const last = real[real.length - 1];
+    const older = real.slice(-4, -1).reverse();
+    const cards = pool();
+    const c = cards.length ? cards[Math.floor(Date.now() / 864e5) % cards.length] : null;
+    const rv = real.filter((e) => reviewed.has(e.id)).length;
+    const pend = real.slice().reverse().find((e) => my[e.id] && my[e.id].comp && !my[e.id].done);
+    let h = '';
+    if (last) {
+      h += '<section class="hero"><div class="meta">Última sesión · ' + esc(dateLabel(last)) + ' · Resumen ' + sumTime(last) + '</div><h1>' + esc(last.title) + '</h1>' +
+        (last.idea ? '<div class="idea"><span class="lab">Idea central</span><p>' + esc(last.idea) + '</p></div>' : '') +
+        ((last.claves || []).length ? '<ul class="claves">' + last.claves.map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '') +
+        '<div class="acts"><button type="button" class="btn primary" data-open="' + last.id + '">Leer la sesión</button><button type="button" class="btn" data-act="copy" data-id="' + last.id + '">Copiar resumen</button></div></section>';
+    }
+    h += calBox();
+    if (pend) h += '<h2 class="sec">Mi compromiso</h2><div class="qcard"><p class="q">' + esc(my[pend.id].comp) + '</p><div class="chips2"><span>De la sesión</span>' + sesChips([pend.id]) + '</div><button type="button" class="btn" data-act="compdone" data-id="' + pend.id + '">Marcar como cumplido</button></div>';
+    if (c) {
+      h += '<h2 class="sec">Tarjeta del día</h2><div class="qcard"><p class="q">' + esc(c.q) + '</p>' +
+        (S.homeShow ? '<p class="a">' + esc(c.a) + '</p><div class="chips2"><span>Ver en</span>' + sesChips([c.s]) + '</div>' : '<button type="button" class="btn" data-act="homeshow">Mostrar respuesta</button>') + '</div>';
+    }
+    if (older.length) h += '<h2 class="sec">Sesiones anteriores</h2>' + older.map((e) => row(e, '')).join('') +
+      '<div class="acts" style="margin-top:.7rem"><button type="button" class="btn" data-tab="sesiones">Ver todas (' + real.length + ')</button></div>';
+    h += '<div class="prog"><span>' + rv + ' de ' + real.length + ' sesiones repasadas</span><span>' + Math.round(100 * rv / Math.max(1, real.length)) + '%</span><div class="bar2"><i style="width:' + Math.round(100 * rv / Math.max(1, real.length)) + '%"></i></div></div>';
+    $('view').innerHTML = h;
+  }
+
+  function matchItem(e) {
+    const q = S.q.trim();
+    if (q && e.hay.indexOf(fold(q)) === -1) return false;
+    if (S.month && e.date !== S.month) return false;
+    if (e.gap) {
+      if (q || S.month) return false;
+      return S.filter === 'todas' || S.filter === e.date.slice(0, 4);
+    }
+    if (S.filter === 'pend') return !reviewed.has(e.id);
+    if (/^\d{4}$/.test(S.filter)) return e.date.slice(0, 4) === S.filter;
+    return true;
+  }
+  function renderChips() {
+    const years = Array.from(new Set(real.map((e) => e.date.slice(0, 4)))).sort().reverse();
+    let h = [['todas', 'Todas'], ['pend', 'Sin repasar']].concat(years.map((y) => [y, y])).map((c) => '<button type="button" class="fchip" data-f="' + c[0] + '" aria-pressed="' + (S.filter === c[0]) + '">' + c[1] + '</button>').join('');
+    if (S.month) { const p = parts(S.month); h = '<button type="button" class="fchip" data-act="clearmonth" aria-pressed="true">' + AB[p.m] + ' ' + p.y + ' ✕</button>' + h; }
+    $('chips').innerHTML = h;
+  }
+  function renderSessions() {
+    $('view').innerHTML = calBox() + '<div class="sbar"><input type="search" id="q" placeholder="Buscar: vergüenza, oración, pudor…" aria-label="Buscar en las sesiones" autocomplete="off" value="' + esc(S.q) + '"><div class="chips" id="chips"></div></div><p class="count" id="count" aria-live="polite"></p><div id="res"></div>';
+    renderChips();
+    renderResults();
+  }
+  function renderResults() {
+    const q = S.q.trim();
+    const list = items.slice().reverse().filter(matchItem);
+    let h = '', lastY = null;
+    list.forEach((e) => {
+      const p = parts(e.date);
+      if (p.y !== lastY) { h += '<h2 class="yr"><span>' + p.y + '</span><button type="button" class="btn ghost" data-act="year" data-y="' + p.y + '">Repaso del año</button></h2>'; lastY = p.y; }
+      if (e.gap) h += '<div class="gaprow"><b>' + esc(e.label) + '</b><span>' + esc(e.text) + '</span></div>';
+      else h += row(e, q);
+    });
+    const n = list.filter((e) => !e.gap).length;
+    if (!n) h = '<p class="empty">' + (q ? 'No hay sesiones con «' + esc(q) + '». Prueba con otra palabra.' : 'No hay sesiones con este filtro.') + '</p>';
+    if ($('res')) $('res').innerHTML = h;
+    if ($('count')) $('count').textContent = q ? n + (n === 1 ? ' resultado' : ' resultados') + ' para «' + q + '»' : n + ' sesiones';
+  }
+
+  function renderSession() {
+    const e = byId[S.sid];
+    if (!e || e.gap) { go('sesiones'); return; }
+    const q = S.q.trim();
+    const i = real.indexOf(e), older = real[i - 1], newer = real[i + 1];
+    const done = reviewed.has(e.id), m = my[e.id] || {};
+    let h = '<div class="dbar"><button type="button" class="btn ghost" data-act="back">← Volver</button><div class="pg">' +
+      (e.src === 'draft' && editor ? '<button type="button" class="btn" data-act="edit" data-id="' + e.id + '">Editar</button>' : '') +
+      '<button type="button" class="btn" data-act="copy" data-id="' + e.id + '">Copiar</button></div></div>' +
+      '<article class="sess"><div class="meta">' + esc(dateLabel(e)) + ' · Resumen ' + sumTime(e) + ' · Notas ' + e.mins + ' min' + (e.src === 'draft' ? ' · Borrador solo en este dispositivo' : '') + '</div><h1>' + hl(e.title, q) + '</h1>' + (e.sub ? '<p class="sub">' + hl(e.sub, q) + '</p>' : '') +
+      (e.idea ? '<div class="idea"><span class="lab">Idea central</span><p>' + hl(e.idea, q) + '</p></div>' : '') +
+      ((e.claves || []).length ? '<span class="lab">Claves para recordar</span><ul class="claves">' + e.claves.map((x) => '<li>' + hl(x, q) + '</li>').join('') + '</ul>' : '') +
+      (e.pensar ? '<div class="pensar"><span class="lab">Para pensar</span><p>' + hl(e.pensar, q) + '</p></div>' : '') +
+      ((e.terms || []).length ? '<div class="terms"><span class="lab" style="margin:0">Conceptos</span>' + termChips(e.terms) + '</div>' : '') +
+      '<details class="notes"' + (q ? ' open' : '') + '><summary>Notas completas · ' + e.mins + ' min</summary><div class="notes-body">' + (e.blocks.length ? renderBlocks(e.blocks, q) : '<p class="muted">Esta sesión no tiene notas completas.</p>') + '</div></details>' +
+      '<div class="acts"><button type="button" class="btn' + (done ? ' done' : '') + '" data-rev="' + e.id + '">' + (done ? 'Repasada ✓' : 'Marcar como repasada') + '</button></div>' +
+      '<section class="mine"><h3>Mi compromiso y mi nota</h3>' +
+      '<label class="field">Mi compromiso<input type="text" id="my-comp" maxlength="160" placeholder="Algo concreto que voy a hacer" value="' + esc(m.comp || '') + '"></label>' +
+      '<label class="check"><input type="checkbox" id="my-done"' + (m.done ? ' checked' : '') + '> Cumplido</label>' +
+      '<label class="field">Mi nota<textarea id="my-note" rows="3" maxlength="1500" placeholder="Lo que me llevo, una duda…">' + esc(m.note || '') + '</textarea></label>' +
+      '<div class="acts"><button type="button" class="btn" data-act="sharenote" data-id="' + e.id + '">Copiar para el grupo</button></div>' +
+      '<p class="hint">Solo se guarda en este dispositivo. Nadie más la ve.</p></section>' +
+      '<div class="nextrow">' + (older ? '<button type="button" data-open="' + older.id + '">← Anterior<b>' + esc(older.title) + '</b></button>' : '<span></span>') + (newer ? '<button type="button" data-open="' + newer.id + '">Siguiente →<b>' + esc(newer.title) + '</b></button>' : '<span></span>') + '</div></article>';
+    $('view').innerHTML = h;
+  }
+
+  /* ---------- Conceptos ---------- */
+  function renderConcepts() {
+    $('view').innerHTML = '<h2 class="sec" style="margin-top:.8rem">El hilo en 6 pasos</h2><ol class="steps">' +
+      PATH.map((s) => '<li><details><summary><span><small>' + esc(s.ph) + '</small><b>' + esc(s.t) + '</b></span></summary><div class="in"><p>' + esc(s.x) + '</p><div class="chips2">' + termChips(s.terms) + '</div><div class="chips2"><span>Se explica en</span>' + sesChips(s.ses) + '</div></div></details></li>').join('') + '</ol>' +
+      '<h2 class="sec">Conceptos</h2><div class="sbar" style="position:static;padding-top:0"><input type="search" id="cq" placeholder="Filtrar: pudor, sopor, alianza…" aria-label="Filtrar conceptos" autocomplete="off" value="' + esc(S.cq) + '"></div><div id="terms"></div>';
+    renderTerms();
+  }
+  function renderTerms() {
+    const fq = fold(S.cq.trim());
+    const list = GLOSS.slice().sort((a, b) => fold(a.name).localeCompare(fold(b.name), 'es')).filter((g) => !fq || fold(g.name + ' ' + g.def).indexOf(fq) !== -1);
+    $('terms').innerHTML = list.length ? list.map((g) => '<div class="tl"><details id="term-' + g.id + '"' + (fq && list.length === 1 ? ' open' : '') + '><summary><b>' + esc(g.name) + '</b></summary><div class="in"><p>' + esc(g.def) + '</p><div class="chips2"><span>Aparece en</span>' + sesChips(g.from) + '</div></div></details></div>').join('') : '<p class="empty">No hay conceptos con esa palabra.</p>';
+  }
+
+  /* ---------- Repasar ---------- */
+  let deck = [], pos = 0, shown = false, onlyPending = false, cardPool = [];
+  function buildDeck(shuffle) {
+    cardPool = pool();
+    let list = cardPool.filter((c) => !onlyPending || !known.has(c.k));
+    if (shuffle) for (let i = list.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = list[i]; list[i] = list[j]; list[j] = t; }
+    deck = list; pos = 0; shown = false;
+  }
+  function renderReview() {
+    if (!deck.length && !pos) buildDeck(false);
+    const n = cardPool.length, k = cardPool.filter((c) => known.has(c.k)).length;
+    let h = '<div class="ctrls"><button type="button" class="btn" data-act="shuffle">Mezclar</button><label><input type="checkbox" id="pend"' + (onlyPending ? ' checked' : '') + '> Solo pendientes</label><button type="button" class="btn ghost" data-act="reset">Borrar progreso</button></div>' +
+      '<div class="deckbar" style="margin-top:.9rem"><span>' + (pos < deck.length ? 'Tarjeta ' + (pos + 1) + ' de ' + deck.length : 'Fin de la vuelta') + '</span><span>' + k + ' de ' + n + ' sabidas</span></div><div class="bar2" style="margin-top:.4rem"><i style="width:' + Math.round(100 * k / Math.max(1, n)) + '%"></i></div>';
+    if (pos >= deck.length) {
+      h += '<div class="card"><span class="lab">Vuelta completada</span><div class="q">' + (deck.length ? 'Has repasado ' + deck.length + ' tarjetas.' : (onlyPending ? 'No te queda ninguna pendiente.' : 'No hay tarjetas.')) + '</div><div class="a">Sabes ' + k + ' de ' + n + '.</div><div class="acts">' + (k < n ? '<button type="button" class="btn primary" data-act="pending">Repasar pendientes</button>' : '') + '<button type="button" class="btn" data-act="restart">Empezar de nuevo</button></div></div>';
+    } else {
+      const c = deck[pos];
+      h += '<div class="card"><span class="lab">Pregunta</span><div class="q">' + esc(c.q) + '</div>' + (shown
+        ? '<div class="a">' + esc(c.a) + '</div><div class="src"><span>Ver en</span>' + sesChips([c.s]) + '</div><div class="acts"><button type="button" class="btn primary" data-act="know">La sabía</button><button type="button" class="btn" data-act="again">Repasar otra vez</button></div>'
+        : '<div class="acts"><button type="button" class="btn primary" data-act="show">Mostrar respuesta</button></div>') + '</div>' +
+        '<div class="subnav"><button type="button" class="btn ghost" data-act="prev"' + (pos === 0 ? ' disabled' : '') + '>← Anterior</button><button type="button" class="btn ghost" data-act="skip">Saltar →</button></div>';
+    }
+    $('view').innerHTML = h;
+  }
+  function deckAct(a) {
+    const c = deck[pos];
+    if (a === 'show') shown = true;
+    else if (a === 'know') { known.add(c.k); LS.set('pac.known', Array.from(known)); pos++; shown = false; }
+    else if (a === 'again') { known.delete(c.k); LS.set('pac.known', Array.from(known)); pos++; shown = false; }
+    else if (a === 'skip') { pos++; shown = false; }
+    else if (a === 'prev') { if (pos > 0) pos--; shown = false; }
+    else if (a === 'pending') { onlyPending = true; buildDeck(false); }
+    else if (a === 'restart') { buildDeck(false); }
+    else if (a === 'shuffle') { buildDeck(true); }
+    else if (a === 'reset') { known.clear(); LS.set('pac.known', []); onlyPending = false; buildDeck(false); }
+    renderReview();
+  }
+
+  /* ---------- Hoja y avisos ---------- */
+  function openSheet(html) { $('sheet-c').innerHTML = html; $('sheet').hidden = false; $('sheet-c').scrollTop = 0; }
+  function closeSheet() { $('sheet').hidden = true; $('sheet-c').innerHTML = ''; S.confirm = null; }
+  let toastT;
+  function toast(msg) {
+    const t = $('toast'); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 2600);
+  }
+  function openTerm(id) {
+    const g = glossById[id]; if (!g) return;
+    openSheet('<h2>' + esc(g.name) + '</h2><p>' + esc(g.def) + '</p><div class="chips2"><span>Aparece en</span>' + sesChips(g.from) + '</div><div class="acts" style="margin-top:.8rem"><button type="button" class="btn" data-act="close">Cerrar</button></div>');
+  }
+  function openYear(y) {
+    const list = real.filter((e) => e.date.slice(0, 4) === String(y));
+    const count = {};
+    list.forEach((e) => (e.terms || []).forEach((t) => { count[t] = (count[t] || 0) + 1; }));
+    const top = Object.keys(count).sort((a, b) => count[b] - count[a]).slice(0, 6);
+    openSheet('<h2>Repaso de ' + y + '</h2><p class="hint">' + list.length + ' sesiones. Una frase por sesión.</p>' +
+      list.map((e) => '<button type="button" class="row" data-open="' + e.id + '"><span class="d"><b>' + AB[parts(e.date).m] + '</b></span><span><span class="t">' + esc(e.title) + '</span><span class="s" style="-webkit-line-clamp:3">' + esc(lead(e)) + '</span></span><span></span></button>').join('') +
+      (top.length ? '<h2 class="sec">Conceptos más tratados</h2><div class="chips2">' + termChips(top) + '</div>' : '') +
+      '<div class="acts" style="margin-top:1rem"><button type="button" class="btn" data-act="close">Cerrar</button></div>');
+  }
+  function summaryText(e) {
+    let t = e.title + ' (' + dateLabel(e) + ')\n';
+    if (e.idea) t += '\nIdea central: ' + e.idea + '\n';
+    if ((e.claves || []).length) t += '\nClaves:\n' + e.claves.map((x) => '- ' + x).join('\n') + '\n';
+    if (e.pensar) t += '\nPara pensar: ' + e.pensar + '\n';
+    return t.trim();
+  }
+  function copyRaw(txt, title) {
+    const fallback = () => {
+      openSheet('<h2>' + esc(title || 'Copiar') + '</h2><p class="hint">Mantén pulsado el texto, selecciónalo y cópialo.</p><textarea class="copy" id="copy-t" readonly></textarea><div class="acts" style="margin-top:.7rem"><button type="button" class="btn" data-act="close">Cerrar</button></div>');
+      const ta = $('copy-t'); ta.value = txt; ta.focus(); ta.select();
+    };
+    try {
+      if (!navigator.clipboard) return fallback();
+      navigator.clipboard.writeText(txt).then(() => toast('Copiado.'), fallback);
+    } catch (err) { fallback(); }
+  }
+
+  /* ---------- Borradores (solo modo editor) ---------- */
+  let editId = null, pickTerms = new Set();
+  function todayStr() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function openEditor(id) {
+    const cur = id ? drafts.find((d) => d.id === id) : null;
+    editId = cur ? cur.id : null;
+    pickTerms = new Set((cur && cur.terms) || []);
+    const date = cur && cur.date ? (cur.date.length === 7 ? cur.date + '-01' : cur.date) : todayStr();
+    openSheet('<h2>' + (cur ? 'Editar borrador' : 'Nueva sesión (borrador)') + '</h2><p class="hint">Se guarda solo en este dispositivo. Cuando esté listo, cópialo y mándaselo a Claude para publicarlo en la web.</p>' +
+      '<label class="field">Fecha de la catequesis<input type="date" id="e-date" value="' + esc(date) + '"></label>' +
+      '<label class="field">Tus notas<textarea id="e-text" rows="7" placeholder="Pega o escribe aquí tus notas. Las líneas que empiezan por «.» o «-» se muestran como viñetas.">' + esc(cur ? cur.text : '') + '</textarea></label>' +
+      '<label class="field">Título<input type="text" id="e-title" maxlength="120" value="' + esc(cur ? cur.title : '') + '"></label>' +
+      '<label class="field">Idea central (una frase, opcional)<textarea id="e-idea" rows="2" maxlength="300">' + esc(cur ? cur.idea : '') + '</textarea></label>' +
+      '<label class="field">Claves (una por línea, opcional)<textarea id="e-claves" rows="3">' + esc(cur && cur.claves ? cur.claves.join('\n') : '') + '</textarea></label>' +
+      '<label class="field">Para pensar (opcional)<input type="text" id="e-pensar" maxlength="240" value="' + esc(cur ? cur.pensar : '') + '"></label>' +
+      '<span class="lab">Conceptos relacionados</span><div class="terms" id="e-terms">' + GLOSS.map((g) => '<button type="button" class="chip pick" data-pick="' + g.id + '" aria-pressed="' + pickTerms.has(g.id) + '">' + esc(g.name.replace(/ y donación| originaria| y naturaleza caída/g, '')) + '</button>').join('') + '</div>' +
+      '<div class="acts" style="margin-top:1rem"><button type="button" class="btn primary" data-act="save">Guardar borrador</button><button type="button" class="btn" data-act="close">Cancelar</button></div>');
+  }
+  function saveDraft() {
+    const text = $('e-text').value.trim(), title = $('e-title').value.trim();
+    if (!title && !text) { toast('Añade al menos un título o tus notas.'); return; }
+    const old = editId ? drafts.find((d) => d.id === editId) : null;
+    const doc = {
+      id: editId || 'b' + Date.now().toString(36), date: $('e-date').value || todayStr(),
+      title: title || text.split(/\r?\n/)[0].slice(0, 80), idea: $('e-idea').value.trim(),
+      claves: $('e-claves').value.split('\n').map((x) => x.trim()).filter(Boolean), pensar: $('e-pensar').value.trim(),
+      terms: Array.from(pickTerms), text: text, added: old ? old.added : todayStr()
+    };
+    if (old) drafts[drafts.indexOf(old)] = doc; else drafts.push(doc);
+    saveDrafts(); closeSheet(); refresh(); toast('Borrador guardado.');
+  }
+  function openDrafts() {
+    openSheet('<h2>Borradores</h2>' + (drafts.length
+      ? '<p class="hint">Solo están en este dispositivo. Cuando estén listos, pulsa «Copiar para Claude» y pega el texto en el chat.</p>' + drafts.map((d) =>
+        '<div class="dr"><div><b>' + esc(d.title) + '</b><span class="hint"> · ' + esc(d.date) + '</span></div><div class="acts"><button type="button" class="btn" data-act="edit" data-id="' + d.id + '">Editar</button>' +
+        (S.confirm === d.id ? '<button type="button" class="btn danger" data-act="dd" data-id="' + d.id + '">¿Seguro? Borrar</button>' : '<button type="button" class="btn danger" data-act="ddask" data-id="' + d.id + '">Borrar</button>') + '</div></div>').join('') +
+        '<div class="acts" style="margin-top:1rem"><button type="button" class="btn primary" data-act="exportdrafts">Copiar para Claude</button><button type="button" class="btn" data-act="close">Cerrar</button></div>'
+      : '<p class="hint">No hay borradores. Pulsa «+ Nueva» para escribir una sesión.</p><div class="acts"><button type="button" class="btn" data-act="close">Cerrar</button></div>'));
+  }
+
+  /* ---------- Mis datos: copia de seguridad ---------- */
+  function openData() {
+    const dump = JSON.stringify({ v: 1, reviewed: Array.from(reviewed), known: Array.from(known), my: my, drafts: drafts });
+    openSheet('<h2>Mis datos</h2><p class="hint">Lo que repasas, tus notas y compromisos se guardan solo en este dispositivo. Para pasarlos a otro móvil o guardarlos, copia este código y pégalo allí.</p>' +
+      '<div class="acts"><button type="button" class="btn primary" data-act="copydata">Copiar mis datos</button></div>' +
+      '<label class="field" style="margin-top:1rem">Pegar datos de otro dispositivo<textarea id="imp" rows="3" placeholder="Pega aquí el código copiado"></textarea></label>' +
+      '<div class="acts"><button type="button" class="btn" data-act="import">Importar</button><button type="button" class="btn" data-act="close">Cerrar</button></div>' +
+      '<p class="hint" style="margin-top:1rem">' + (editor ? 'Modo editor activado en este dispositivo. ' : '') + '</p>' + (editor ? '<div class="acts"><button type="button" class="btn ghost" data-act="editoroff">Desactivar modo editor</button></div>' : ''));
+    S.dump = dump;
+  }
+  function importData() {
+    const t = ($('imp').value || '').trim();
+    try {
+      const d = JSON.parse(t);
+      if (!d || d.v !== 1) throw new Error('x');
+      (d.reviewed || []).forEach((x) => reviewed.add(x));
+      (d.known || []).forEach((x) => known.add(x));
+      Object.keys(d.my || {}).forEach((k) => { my[k] = Object.assign({}, d.my[k], my[k] || {}); });
+      (d.drafts || []).forEach((x) => { if (!drafts.some((y) => y.id === x.id)) drafts.push(x); });
+      LS.set('pac.reviewed', Array.from(reviewed)); LS.set('pac.known', Array.from(known)); saveMy(); saveDrafts();
+      closeSheet(); buildDeck(false); refresh(); toast('Datos importados.');
+    } catch (e) { toast('Ese código no es válido.'); }
+  }
+
+  /* ---------- Navegación ---------- */
+  const TABS = ['inicio', 'sesiones', 'conceptos', 'repasar'];
+  function render() {
+    renderTop();
+    document.querySelectorAll('.bar [data-tab]').forEach((b) => { if (b.dataset.tab === (S.sid ? S.from : S.tab)) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+    if (S.sid) renderSession();
+    else if (S.tab === 'inicio') renderHome();
+    else if (S.tab === 'sesiones') renderSessions();
+    else if (S.tab === 'conceptos') renderConcepts();
+    else renderReview();
+  }
+  function setHash(h) { try { if (location.hash !== '#' + h) location.hash = h; } catch (e) {} }
+  function go(tab, sid) {
+    S.scroll[S.sid ? 's' : S.tab] = window.scrollY;
+    if (sid) { if (!S.sid) S.from = S.tab; S.sid = sid; setHash('s-' + sid); }
+    else { S.tab = tab; S.sid = null; setHash(tab); }
+    render();
+    window.scrollTo(0, sid ? 0 : (S.scroll[tab] || 0));
+  }
+  function route() {
+    const h = (location.hash || '').slice(1);
+    if (!h) return;
+    if (h === 'editar') { editor = true; LS.set('pac.editor', true); setHash('inicio'); toast('Modo editor activado en este dispositivo.'); render(); return; }
+    if (h.indexOf('s-') === 0) { const id = h.slice(2); if (byId[id] && S.sid !== id) { if (!S.sid) S.from = S.tab; S.sid = id; render(); window.scrollTo(0, 0); } }
+    else if (TABS.indexOf(h) !== -1 && (S.tab !== h || S.sid)) { S.tab = h; S.sid = null; render(); }
+  }
+  function refresh() {
+    build();
+    if (S.sid && !byId[S.sid]) { S.sid = null; S.tab = 'sesiones'; }
+    render();
+  }
+
+  /* ---------- Eventos ---------- */
+  document.addEventListener('click', (ev) => {
+    const t = ev.target;
+    const o = t.closest('[data-open]');
+    if (o) { closeSheet(); go(null, o.dataset.open); return; }
+    const mo = t.closest('[data-month]');
+    if (mo) { S.month = mo.dataset.month; S.q = ''; S.filter = 'todas'; closeSheet(); go('sesiones'); return; }
+    const tb = t.closest('[data-tab]');
+    if (tb) { closeSheet(); go(tb.dataset.tab); return; }
+    const tm = t.closest('[data-term]');
+    if (tm) { openTerm(tm.dataset.term); return; }
+    const f = t.closest('[data-f]');
+    if (f) { S.filter = f.dataset.f; renderChips(); renderResults(); return; }
+    const pk = t.closest('[data-pick]');
+    if (pk) { const id = pk.dataset.pick; if (pickTerms.has(id)) pickTerms.delete(id); else pickTerms.add(id); pk.setAttribute('aria-pressed', pickTerms.has(id)); return; }
+    const rv = t.closest('[data-rev]');
+    if (rv) { const id = rv.dataset.rev; if (reviewed.has(id)) reviewed.delete(id); else reviewed.add(id); LS.set('pac.reviewed', Array.from(reviewed)); const on = reviewed.has(id); rv.textContent = on ? 'Repasada ✓' : 'Marcar como repasada'; rv.classList.toggle('done', on); return; }
+    if (t.closest('[data-close]')) { closeSheet(); return; }
+    const a = t.closest('[data-act]');
+    if (!a) return;
+    const act = a.dataset.act, id = a.dataset.id;
+    if (act === 'back') go(S.from || 'sesiones');
+    else if (act === 'close') closeSheet();
+    else if (act === 'copy') { const e = byId[id]; if (e) copyRaw(summaryText(e), 'Copiar resumen'); }
+    else if (act === 'sharenote') { const e = byId[id], m = my[id] || {}; if (e) copyRaw('Sobre «' + e.title + '» (' + dateLabel(e) + ')' + (m.note ? '\n' + m.note : '') + (m.comp ? '\nMi compromiso: ' + m.comp : ''), 'Copiar para el grupo'); }
+    else if (act === 'homeshow') { S.homeShow = true; renderHome(); }
+    else if (act === 'compdone') { my[id] = Object.assign({}, my[id], { done: true }); saveMy(); renderHome(); toast('Compromiso cumplido.'); }
+    else if (act === 'clearmonth') { S.month = null; renderChips(); renderResults(); }
+    else if (act === 'year') openYear(a.dataset.y);
+    else if (act === 'new') openEditor(null);
+    else if (act === 'edit') openEditor(id);
+    else if (act === 'save') saveDraft();
+    else if (act === 'drafts') openDrafts();
+    else if (act === 'ddask') { S.confirm = id; openDrafts(); }
+    else if (act === 'dd') { drafts = drafts.filter((d) => d.id !== id); saveDrafts(); S.confirm = null; refresh(); openDrafts(); toast('Borrador borrado.'); }
+    else if (act === 'exportdrafts') copyRaw(JSON.stringify(drafts, null, 1), 'Copiar para Claude');
+    else if (act === 'copydata') copyRaw(S.dump || '', 'Copiar mis datos');
+    else if (act === 'import') importData();
+    else if (act === 'editoroff') { editor = false; LS.set('pac.editor', false); closeSheet(); render(); toast('Modo editor desactivado.'); }
+    else if (act === 'mydata') openData();
+    else deckAct(act);
+  });
+  document.addEventListener('input', (ev) => {
+    const t = ev.target;
+    if (t.id === 'q') { S.q = t.value; renderResults(); }
+    else if (t.id === 'cq') { S.cq = t.value; renderTerms(); }
+    else if (t.id === 'my-comp' || t.id === 'my-note') {
+      const cur = my[S.sid] || {};
+      cur[t.id === 'my-comp' ? 'comp' : 'note'] = t.value; my[S.sid] = cur; saveMy();
+    }
+  });
+  document.addEventListener('change', (ev) => {
+    const t = ev.target;
+    if (t.id === 'pend') { onlyPending = t.checked; buildDeck(false); renderReview(); }
+    else if (t.id === 'my-done') { my[S.sid] = Object.assign({}, my[S.sid], { done: t.checked }); saveMy(); }
+  });
+  document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && !$('sheet').hidden) closeSheet(); });
+  window.addEventListener('hashchange', route);
+
+  /* ---------- Arranque ---------- */
+  build();
+  buildDeck(false);
+  $('foot').innerHTML = 'Las ideas centrales, las claves y las tarjetas resumen las notas de cada sesión. <button type="button" class="linkbtn" data-act="mydata">Mis datos</button>';
+  render();
+  route();
+})();
+
+</script>
+</body>
+</html>
