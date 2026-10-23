@@ -1,0 +1,12 @@
+// Aquí se guardan las sesiones nuevas. No borres este archivo.
+// Las líneas que empiezan por // no se muestran en la web.
+// Normalmente no hace falta editarlo a mano: se rellena desde la web con «+ Nueva sesión».
+// Formato de cada sesión (si lo escribes tú):
+//   # 2026-11-15 | Título de la sesión
+//   Idea: una frase con la idea central (opcional)
+//   Claves:
+//   - primera clave (opcional)
+//   Pensar: pregunta para reflexionar (opcional)
+//   Conceptos: pudor, don (opcional)
+//   Notas:
+//   . tus notas, una por línea

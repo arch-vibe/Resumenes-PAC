@@ -792,10 +792,9 @@
   const reviewed = new Set(LS.get('pac.reviewed', []));
   const known = new Set(LS.get('pac.known', []));
   let my = LS.get('pac.my', {});
-  let drafts = LS.get('pac.drafts', []);
-  let editor = !!LS.get('pac.editor', false);
+  let cfg = LS.get('pac.gh', null);
+  let notasText = '';
   const saveMy = () => LS.set('pac.my', my);
-  const saveDrafts = () => LS.set('pac.drafts', drafts);
 
   function fold(s) {
     let out = '';
@@ -863,12 +862,12 @@
       title: d.title || 'Sesión sin título', sub: d.sub || '', idea: d.idea || '',
       claves: Array.isArray(d.claves) ? d.claves : [], pensar: d.pensar || '',
       terms: (Array.isArray(d.terms) ? d.terms : []).filter((t) => glossById[t]),
-      raw: d.text || '', blocks: textToBlocks(d.text || ''), added: d.added || ''
+      raw: d.text || '', blocks: textToBlocks(d.text || ''), added: d.added || '', hdr: d.hdr || ''
     };
   }
   function build() {
     const seed = E.map((e, i) => Object.assign({ seq: i, src: 'seed', key: e.date + '-00' }, e, LEARN[e.id] || {}));
-    const added = NEW.map((d, i) => fromRaw(d, 'new', i)).concat(drafts.map((d, i) => fromRaw(d, 'draft', 500 + i)));
+    const added = NEW.map((d, i) => fromRaw(d, 'new', i)).concat(parseNotas(notasText).map((d, i) => fromRaw(d, 'gh', 500 + i)));
     items = seed.concat(added);
     items.forEach((e) => {
       if (e.gap) { e.hay = fold(e.title + ' ' + e.text); e.body = ''; return; }
@@ -936,7 +935,7 @@
     return (a > 0 ? '…' : '') + hl(e.body.slice(a, b), q) + (b < e.body.length ? '…' : '');
   }
   function isRecent(e) {
-    if (e.src !== 'new' || !e.added) return false;
+    if ((e.src !== 'new' && e.src !== 'gh') || !e.added) return false;
     return Date.now() - new Date(e.added).getTime() < 21 * 864e5;
   }
   function row(e, q) {
@@ -944,7 +943,7 @@
     const inHead = q && (fold(e.title + ' ' + (e.idea || '')).indexOf(fold(q)) !== -1);
     const sub = q && !inHead ? snippet(e, q) : esc(lead(e));
     return '<button type="button" class="row" data-open="' + e.id + '"><span class="d"><b>' + (e.day ? +e.day + ' ' : '') + AB[p.m] + '</b>' + p.y + '</span>' +
-      '<span><span class="t">' + hl(e.title, q) + (isRecent(e) ? '<span class="new">Nueva</span>' : '') + (e.src === 'draft' ? '<span class="new">Borrador</span>' : '') + '</span><span class="s">' + sub + '</span></span>' +
+      '<span><span class="t">' + hl(e.title, q) + (isRecent(e) ? '<span class="new">Nueva</span>' : '') + '</span><span class="s">' + sub + '</span></span>' +
       '<span class="r">' + (done ? '<span class="tick" title="Repasada">✓</span>' : '') + (m && (m.note || m.comp) ? '<span class="dot" title="Tienes una nota"></span>' : '') + '</span></button>';
   }
 
@@ -977,7 +976,7 @@
   /* ---------- Vistas ---------- */
   function renderTop() {
     $('top').innerHTML = '<div class="brand"><small>Catequesis PAC</small>Teología del cuerpo</div>' +
-      (editor ? '<div class="acts"><button type="button" class="btn" data-act="drafts">Borradores' + (drafts.length ? ' (' + drafts.length + ')' : '') + '</button><button type="button" class="btn primary" data-act="new">+ Nueva</button></div>' : '');
+      (connected() ? '<button type="button" class="btn primary" data-act="new">+ Nueva sesión</button>' : '');
   }
 
   function renderHome() {
@@ -1052,9 +1051,9 @@
     const i = real.indexOf(e), older = real[i - 1], newer = real[i + 1];
     const done = reviewed.has(e.id), m = my[e.id] || {};
     let h = '<div class="dbar"><button type="button" class="btn ghost" data-act="back">← Volver</button><div class="pg">' +
-      (e.src === 'draft' && editor ? '<button type="button" class="btn" data-act="edit" data-id="' + e.id + '">Editar</button>' : '') +
+      (e.src === 'gh' && connected() ? '<button type="button" class="btn" data-act="edit" data-id="' + e.id + '">Editar</button>' : '') +
       '<button type="button" class="btn" data-act="copy" data-id="' + e.id + '">Copiar</button></div></div>' +
-      '<article class="sess"><div class="meta">' + esc(dateLabel(e)) + ' · Resumen ' + sumTime(e) + ' · Notas ' + e.mins + ' min' + (e.src === 'draft' ? ' · Borrador solo en este dispositivo' : '') + '</div><h1>' + hl(e.title, q) + '</h1>' + (e.sub ? '<p class="sub">' + hl(e.sub, q) + '</p>' : '') +
+      '<article class="sess"><div class="meta">' + esc(dateLabel(e)) + ' · Resumen ' + sumTime(e) + ' · Notas ' + e.mins + ' min' + '</div><h1>' + hl(e.title, q) + '</h1>' + (e.sub ? '<p class="sub">' + hl(e.sub, q) + '</p>' : '') +
       (e.idea ? '<div class="idea"><span class="lab">Idea central</span><p>' + hl(e.idea, q) + '</p></div>' : '') +
       ((e.claves || []).length ? '<span class="lab">Claves para recordar</span><ul class="claves">' + e.claves.map((x) => '<li>' + hl(x, q) + '</li>').join('') + '</ul>' : '') +
       (e.pensar ? '<div class="pensar"><span class="lab">Para pensar</span><p>' + hl(e.pensar, q) + '</p></div>' : '') +
@@ -1162,54 +1161,206 @@
     } catch (err) { fallback(); }
   }
 
-  /* ---------- Borradores (solo modo editor) ---------- */
-  let editId = null, pickTerms = new Set();
+  /* ---------- Sesiones nuevas: archivo notas.txt en GitHub ---------- */
+  const HDR = /^#\s*(\d{4}-\d{2}(?:-\d{2})?)\s*(?:[|–—-]\s*)?(.*)$/;
+  const LABEL = /^(Idea|Pensar|Conceptos|Claves|Notas)\s*:\s*(.*)$/i;
+  const connected = () => !!(cfg && cfg.token && cfg.repo);
+  function slug(s) { return fold(s).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40); }
+  function splitBlocks(text) {
+    const lines = String(text || '').replace(/\r/g, '').split('\n');
+    const pre = [], blocks = [];
+    let cur = null;
+    lines.forEach((ln) => {
+      if (HDR.test(ln)) { cur = { hdr: ln.trim(), lines: [ln] }; blocks.push(cur); }
+      else if (cur) cur.lines.push(ln); else pre.push(ln);
+    });
+    return { pre: pre.join('\n').trim(), blocks: blocks.map((b) => ({ hdr: b.hdr, text: b.lines.join('\n').trim() })) };
+  }
+  const joinBlocks = (pre, blocks) => (pre ? pre + '\n\n' : '') + blocks.map((b) => b.text).join('\n\n') + '\n';
+  function termIds(str) {
+    const out = [];
+    str.split(/[,;]/).map((x) => fold(x.trim())).filter(Boolean).forEach((tok) => {
+      const g = GLOSS.find((x) => x.id === tok || fold(x.name).indexOf(tok) === 0) || GLOSS.find((x) => fold(x.name).indexOf(tok) !== -1);
+      if (g && out.indexOf(g.id) === -1) out.push(g.id);
+    });
+    return out;
+  }
+  function parseNotas(text) {
+    const used = {};
+    return splitBlocks(text).blocks.map((b) => {
+      const m = b.hdr.match(HDR);
+      const d = { date: m[1], title: (m[2] || '').trim() || 'Sesión sin título', idea: '', pensar: '', claves: [], terms: [], hdr: b.hdr, added: m[1] };
+      let mode = 'notes', explicit = false;
+      const notes = [];
+      b.text.split('\n').slice(1).forEach((raw) => {
+        const ln = raw.trim();
+        if (ln.indexOf('//') === 0) return;
+        const l = explicit ? null : ln.match(LABEL);
+        if (l) {
+          const k = l[1].toLowerCase(), v = l[2].trim();
+          if (k === 'idea') { d.idea = v; mode = 'idea'; }
+          else if (k === 'pensar') { d.pensar = v; mode = 'pensar'; }
+          else if (k === 'conceptos') { d.terms = termIds(v); mode = 'x'; }
+          else if (k === 'claves') { mode = 'claves'; if (v) d.claves.push(v); }
+          else { mode = 'notes'; explicit = true; if (v) notes.push(v); }
+          return;
+        }
+        if (mode === 'claves' && /^([-•*.]|\d+[.)])\s*\S/.test(ln)) { d.claves.push(ln.replace(/^([-•*.]|\d+[.)])\s*/, '')); return; }
+        if (mode === 'claves' && !ln) return;
+        if ((mode === 'idea' || mode === 'pensar') && !ln) { mode = 'notes'; return; }
+        if (mode === 'idea') { d.idea += ' ' + ln; return; }
+        if (mode === 'pensar') { d.pensar += ' ' + ln; return; }
+        if (mode === 'x' && !ln) return;
+        mode = 'notes'; notes.push(raw.replace(/\s+$/, ''));
+      });
+      d.text = notes.join('\n').trim();
+      let id = 'n-' + m[1] + '-' + slug(d.title);
+      if (used[id]) id += '-' + (used[id]++); else used[id] = 1;
+      d.id = id;
+      return d;
+    });
+  }
+  function composeBlock(d) {
+    const L = ['# ' + d.date + ' | ' + d.title];
+    if (d.idea) L.push('Idea: ' + d.idea.replace(/\s*\n+\s*/g, ' '));
+    if (d.claves.length) { L.push('Claves:'); d.claves.forEach((c) => L.push('- ' + c)); }
+    if (d.pensar) L.push('Pensar: ' + d.pensar.replace(/\s*\n+\s*/g, ' '));
+    if (d.terms.length) L.push('Conceptos: ' + d.terms.map((t) => glossById[t].name).join(', '));
+    L.push('Notas:'); L.push(d.text);
+    return L.join('\n');
+  }
+
+  const b64e = (s) => { let bin = ''; new TextEncoder().encode(s).forEach((x) => { bin += String.fromCharCode(x); }); return btoa(bin); };
+  const b64d = (s) => { const bin = atob(String(s).replace(/\s/g, '')); return new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))); };
+  const apiUrl = () => 'https://api.github.com/repos/' + cfg.repo + '/contents/' + cfg.path.split('/').map(encodeURIComponent).join('/');
+  const ghHead = (json) => Object.assign({ Authorization: 'Bearer ' + cfg.token, Accept: 'application/vnd.github+json' }, json ? { 'Content-Type': 'application/json' } : {});
+  async function ghGet() {
+    const r = await fetch(apiUrl() + '?ref=' + encodeURIComponent(cfg.branch) + '&t=' + Date.now(), { headers: ghHead(false), cache: 'no-store' });
+    if (r.status === 404) return { text: '', sha: null };
+    if (!r.ok) throw { status: r.status };
+    const j = await r.json();
+    return { text: b64d(j.content), sha: j.sha };
+  }
+  async function ghPut(text, sha, msg) {
+    const body = { message: msg, content: b64e(text), branch: cfg.branch };
+    if (sha) body.sha = sha;
+    const r = await fetch(apiUrl(), { method: 'PUT', headers: ghHead(true), body: JSON.stringify(body) });
+    if (!r.ok) throw { status: r.status };
+    return r.json();
+  }
+  function ghMsg(e) {
+    const s = e && e.status;
+    if (s === 401) return 'El token no es válido o ha caducado.';
+    if (s === 403) return 'El token no tiene permiso de escritura en este repositorio.';
+    if (s === 404) return 'No se encuentra el repositorio o la rama. Revisa los datos.';
+    if (s === 409 || s === 422) return 'El archivo cambió mientras guardabas. Inténtalo de nuevo.';
+    return 'No se pudo conectar con GitHub. Revisa tu conexión.';
+  }
+  async function mutate(fn, msg) {
+    for (let tries = 0; ; tries++) {
+      const cur = await ghGet();
+      const next = fn(cur.text);
+      try { await ghPut(next, cur.sha, msg); notasText = next; return; }
+      catch (e) { if ((e.status === 409 || e.status === 422) && tries < 1) continue; throw e; }
+    }
+  }
+  async function loadNotas() {
+    try {
+      let text = null;
+      if (connected()) text = (await ghGet()).text;
+      else { const r = await fetch('notas.txt?t=' + Date.now(), { cache: 'no-store' }); if (r.ok) text = await r.text(); }
+      if (text != null && text !== notasText) { notasText = text; refresh(); }
+    } catch (e) {}
+  }
+
+  let editHdr = null, pickTerms = new Set();
   function todayStr() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   function openEditor(id) {
-    const cur = id ? drafts.find((d) => d.id === id) : null;
-    editId = cur ? cur.id : null;
+    const cur = id ? byId[id] : null;
+    editHdr = cur ? cur.hdr : null;
     pickTerms = new Set((cur && cur.terms) || []);
-    const date = cur && cur.date ? (cur.date.length === 7 ? cur.date + '-01' : cur.date) : todayStr();
-    openSheet('<h2>' + (cur ? 'Editar borrador' : 'Nueva sesión (borrador)') + '</h2><p class="hint">Se guarda solo en este dispositivo. Cuando esté listo, cópialo y mándaselo a Claude para publicarlo en la web.</p>' +
+    const date = cur ? cur.date + '-' + (cur.day || '01') : todayStr();
+    openSheet('<h2>' + (cur ? 'Editar sesión' : 'Nueva sesión') + '</h2><p class="hint">Se guarda en tu repositorio de GitHub y todos la verán en 1 o 2 minutos.</p>' +
       '<label class="field">Fecha de la catequesis<input type="date" id="e-date" value="' + esc(date) + '"></label>' +
-      '<label class="field">Tus notas<textarea id="e-text" rows="7" placeholder="Pega o escribe aquí tus notas. Las líneas que empiezan por «.» o «-» se muestran como viñetas.">' + esc(cur ? cur.text : '') + '</textarea></label>' +
       '<label class="field">Título<input type="text" id="e-title" maxlength="120" value="' + esc(cur ? cur.title : '') + '"></label>' +
+      '<label class="field">Tus notas<textarea id="e-text" rows="8" placeholder="Pega o escribe aquí tus notas. Las líneas que empiezan por «.» o «-» se muestran como viñetas.">' + esc(cur ? cur.raw : '') + '</textarea></label>' +
       '<label class="field">Idea central (una frase, opcional)<textarea id="e-idea" rows="2" maxlength="300">' + esc(cur ? cur.idea : '') + '</textarea></label>' +
       '<label class="field">Claves (una por línea, opcional)<textarea id="e-claves" rows="3">' + esc(cur && cur.claves ? cur.claves.join('\n') : '') + '</textarea></label>' +
       '<label class="field">Para pensar (opcional)<input type="text" id="e-pensar" maxlength="240" value="' + esc(cur ? cur.pensar : '') + '"></label>' +
-      '<span class="lab">Conceptos relacionados</span><div class="terms" id="e-terms">' + GLOSS.map((g) => '<button type="button" class="chip pick" data-pick="' + g.id + '" aria-pressed="' + pickTerms.has(g.id) + '">' + esc(g.name.replace(/ y donación| originaria| y naturaleza caída/g, '')) + '</button>').join('') + '</div>' +
-      '<div class="acts" style="margin-top:1rem"><button type="button" class="btn primary" data-act="save">Guardar borrador</button><button type="button" class="btn" data-act="close">Cancelar</button></div>');
+      '<span class="lab">Conceptos relacionados (opcional)</span><div class="terms" id="e-terms">' + GLOSS.map((g) => '<button type="button" class="chip pick" data-pick="' + g.id + '" aria-pressed="' + pickTerms.has(g.id) + '">' + esc(g.name.replace(/ y donación| originaria| y naturaleza caída/g, '')) + '</button>').join('') + '</div>' +
+      '<div class="acts" style="margin-top:1rem"><button type="button" class="btn primary" id="e-save" data-act="save">Guardar</button><button type="button" class="btn" data-act="close">Cancelar</button>' + (cur ? '<button type="button" class="btn danger" data-act="delask">Borrar</button>' : '') + '</div>');
   }
-  function saveDraft() {
+  let saving = false;
+  async function saveSession() {
+    if (saving) return;
     const text = $('e-text').value.trim(), title = $('e-title').value.trim();
     if (!title && !text) { toast('Añade al menos un título o tus notas.'); return; }
-    const old = editId ? drafts.find((d) => d.id === editId) : null;
-    const doc = {
-      id: editId || 'b' + Date.now().toString(36), date: $('e-date').value || todayStr(),
-      title: title || text.split(/\r?\n/)[0].slice(0, 80), idea: $('e-idea').value.trim(),
-      claves: $('e-claves').value.split('\n').map((x) => x.trim()).filter(Boolean), pensar: $('e-pensar').value.trim(),
-      terms: Array.from(pickTerms), text: text, added: old ? old.added : todayStr()
+    const d = {
+      date: $('e-date').value || todayStr(), title: title || text.split(/\r?\n/)[0].slice(0, 80), idea: $('e-idea').value.trim(),
+      claves: $('e-claves').value.split('\n').map((x) => x.trim()).filter(Boolean), pensar: $('e-pensar').value.trim(), terms: Array.from(pickTerms), text: text
     };
-    if (old) drafts[drafts.indexOf(old)] = doc; else drafts.push(doc);
-    saveDrafts(); closeSheet(); refresh(); toast('Borrador guardado.');
+    const block = composeBlock(d), entry = { hdr: block.split('\n')[0], text: block };
+    saving = true;
+    const btn = $('e-save'); if (btn) { btn.disabled = true; btn.textContent = 'Guardando…'; }
+    try {
+      await mutate((txt) => {
+        const sp = splitBlocks(txt), i = editHdr ? sp.blocks.findIndex((b) => b.hdr === editHdr) : -1;
+        if (i >= 0) sp.blocks[i] = entry; else sp.blocks.push(entry);
+        return joinBlocks(sp.pre, sp.blocks);
+      }, (editHdr ? 'Editar sesión: ' : 'Añadir sesión: ') + d.title);
+      closeSheet(); refresh(); toast('Guardado. Todos la verán en 1 o 2 minutos.');
+    } catch (e) { toast(ghMsg(e)); if (btn) { btn.disabled = false; btn.textContent = 'Guardar'; } }
+    saving = false;
   }
-  function openDrafts() {
-    openSheet('<h2>Borradores</h2>' + (drafts.length
-      ? '<p class="hint">Solo están en este dispositivo. Cuando estén listos, pulsa «Copiar para Claude» y pega el texto en el chat.</p>' + drafts.map((d) =>
-        '<div class="dr"><div><b>' + esc(d.title) + '</b><span class="hint"> · ' + esc(d.date) + '</span></div><div class="acts"><button type="button" class="btn" data-act="edit" data-id="' + d.id + '">Editar</button>' +
-        (S.confirm === d.id ? '<button type="button" class="btn danger" data-act="dd" data-id="' + d.id + '">¿Seguro? Borrar</button>' : '<button type="button" class="btn danger" data-act="ddask" data-id="' + d.id + '">Borrar</button>') + '</div></div>').join('') +
-        '<div class="acts" style="margin-top:1rem"><button type="button" class="btn primary" data-act="exportdrafts">Copiar para Claude</button><button type="button" class="btn" data-act="close">Cerrar</button></div>'
-      : '<p class="hint">No hay borradores. Pulsa «+ Nueva» para escribir una sesión.</p><div class="acts"><button type="button" class="btn" data-act="close">Cerrar</button></div>'));
+  async function delSession() {
+    if (saving || !editHdr) return;
+    saving = true;
+    try {
+      await mutate((txt) => { const sp = splitBlocks(txt); return joinBlocks(sp.pre, sp.blocks.filter((b) => b.hdr !== editHdr)); }, 'Borrar sesión');
+      closeSheet(); refresh(); toast('Sesión borrada.');
+    } catch (e) { toast(ghMsg(e)); }
+    saving = false;
   }
+  function guessRepo() {
+    const h = location.hostname;
+    if (/\.github\.io$/.test(h)) {
+      const user = h.split('.')[0], seg = location.pathname.split('/')[1];
+      return user + '/' + (seg && !/\.html?$/.test(seg) ? seg : user + '.github.io');
+    }
+    return '';
+  }
+  function openConnect() {
+    const c = cfg || {};
+    openSheet('<h2>Editar la web</h2><p class="hint">Para escribir sesiones desde aquí, la web guarda tus notas en el archivo <b>notas.txt</b> de tu repositorio de GitHub. Hace falta un «token» personal con permiso solo sobre ese repositorio. Se guarda únicamente en este dispositivo.</p>' +
+      '<label class="field">Repositorio (usuario/repositorio)<input type="text" id="g-repo" autocomplete="off" autocapitalize="none" placeholder="usuario/catequesis" value="' + esc(c.repo || guessRepo()) + '"></label>' +
+      '<label class="field">Rama<input type="text" id="g-branch" autocomplete="off" autocapitalize="none" value="' + esc(c.branch || 'main') + '"></label>' +
+      '<label class="field">Archivo de notas<input type="text" id="g-path" autocomplete="off" autocapitalize="none" value="' + esc(c.path || 'notas.txt') + '"></label>' +
+      '<label class="field">Token' + (c.token ? ' (ya guardado; déjalo vacío para mantenerlo)' : '') + '<input type="password" id="g-token" autocomplete="off" placeholder="github_pat_…"></label>' +
+      '<details class="notes"><summary>Cómo crear el token</summary><div class="notes-body"><ol><li>En GitHub: tu foto, Settings, Developer settings, Personal access tokens, Fine-grained tokens, Generate new token.</li><li>En «Repository access» elige «Only select repositories» y marca este repositorio.</li><li>En «Permissions», «Repository permissions», pon «Contents» en «Read and write».</li><li>Genera el token, cópialo y pégalo arriba.</li></ol></div></details>' +
+      '<div class="acts" style="margin-top:1rem"><button type="button" class="btn primary" data-act="gsave">Guardar y probar</button><button type="button" class="btn" data-act="close">Cerrar</button>' + (c.token ? '<button type="button" class="btn danger" data-act="goff">Desconectar</button>' : '') + '</div>');
+  }
+  async function saveCfg() {
+    const repo = $('g-repo').value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\.git$/, '').replace(/\/$/, '');
+    const token = $('g-token').value.trim() || (cfg && cfg.token) || '';
+    if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) { toast('Escribe el repositorio como usuario/repositorio.'); return; }
+    if (!token) { toast('Pega el token.'); return; }
+    const prev = cfg;
+    cfg = { repo: repo, branch: $('g-branch').value.trim() || 'main', path: $('g-path').value.trim() || 'notas.txt', token: token };
+    try {
+      const r = await ghGet();
+      LS.set('pac.gh', cfg); notasText = r.text; closeSheet(); refresh(); toast('Conectado. Ya puedes añadir sesiones.');
+    } catch (e) { cfg = prev; toast(ghMsg(e)); }
+  }
+  function disconnect() { cfg = null; LS.set('pac.gh', null); closeSheet(); refresh(); toast('Desconectado.'); }
 
   /* ---------- Mis datos: copia de seguridad ---------- */
   function openData() {
-    const dump = JSON.stringify({ v: 1, reviewed: Array.from(reviewed), known: Array.from(known), my: my, drafts: drafts });
+    const dump = JSON.stringify({ v: 1, reviewed: Array.from(reviewed), known: Array.from(known), my: my });
     openSheet('<h2>Mis datos</h2><p class="hint">Lo que repasas, tus notas y compromisos se guardan solo en este dispositivo. Para pasarlos a otro móvil o guardarlos, copia este código y pégalo allí.</p>' +
       '<div class="acts"><button type="button" class="btn primary" data-act="copydata">Copiar mis datos</button></div>' +
       '<label class="field" style="margin-top:1rem">Pegar datos de otro dispositivo<textarea id="imp" rows="3" placeholder="Pega aquí el código copiado"></textarea></label>' +
       '<div class="acts"><button type="button" class="btn" data-act="import">Importar</button><button type="button" class="btn" data-act="close">Cerrar</button></div>' +
-      '<p class="hint" style="margin-top:1rem">' + (editor ? 'Modo editor activado en este dispositivo. ' : '') + '</p>' + (editor ? '<div class="acts"><button type="button" class="btn ghost" data-act="editoroff">Desactivar modo editor</button></div>' : ''));
+      '');
     S.dump = dump;
   }
   function importData() {
@@ -1220,8 +1371,7 @@
       (d.reviewed || []).forEach((x) => reviewed.add(x));
       (d.known || []).forEach((x) => known.add(x));
       Object.keys(d.my || {}).forEach((k) => { my[k] = Object.assign({}, d.my[k], my[k] || {}); });
-      (d.drafts || []).forEach((x) => { if (!drafts.some((y) => y.id === x.id)) drafts.push(x); });
-      LS.set('pac.reviewed', Array.from(reviewed)); LS.set('pac.known', Array.from(known)); saveMy(); saveDrafts();
+      LS.set('pac.reviewed', Array.from(reviewed)); LS.set('pac.known', Array.from(known)); saveMy();
       closeSheet(); buildDeck(false); refresh(); toast('Datos importados.');
     } catch (e) { toast('Ese código no es válido.'); }
   }
@@ -1248,7 +1398,6 @@
   function route() {
     const h = (location.hash || '').slice(1);
     if (!h) return;
-    if (h === 'editar') { editor = true; LS.set('pac.editor', true); setHash('inicio'); toast('Modo editor activado en este dispositivo.'); render(); return; }
     if (h.indexOf('s-') === 0) { const id = h.slice(2); if (byId[id] && S.sid !== id) { if (!S.sid) S.from = S.tab; S.sid = id; render(); window.scrollTo(0, 0); } }
     else if (TABS.indexOf(h) !== -1 && (S.tab !== h || S.sid)) { S.tab = h; S.sid = null; render(); }
   }
@@ -1289,14 +1438,14 @@
     else if (act === 'year') openYear(a.dataset.y);
     else if (act === 'new') openEditor(null);
     else if (act === 'edit') openEditor(id);
-    else if (act === 'save') saveDraft();
-    else if (act === 'drafts') openDrafts();
-    else if (act === 'ddask') { S.confirm = id; openDrafts(); }
-    else if (act === 'dd') { drafts = drafts.filter((d) => d.id !== id); saveDrafts(); S.confirm = null; refresh(); openDrafts(); toast('Borrador borrado.'); }
-    else if (act === 'exportdrafts') copyRaw(JSON.stringify(drafts, null, 1), 'Copiar para Claude');
+    else if (act === 'save') saveSession();
+    else if (act === 'delask') { a.dataset.act = 'del'; a.textContent = '¿Seguro? Borrar'; }
+    else if (act === 'del') delSession();
+    else if (act === 'connect') openConnect();
+    else if (act === 'gsave') saveCfg();
+    else if (act === 'goff') disconnect();
     else if (act === 'copydata') copyRaw(S.dump || '', 'Copiar mis datos');
     else if (act === 'import') importData();
-    else if (act === 'editoroff') { editor = false; LS.set('pac.editor', false); closeSheet(); render(); toast('Modo editor desactivado.'); }
     else if (act === 'mydata') openData();
     else deckAct(act);
   });
@@ -1320,9 +1469,10 @@
   /* ---------- Arranque ---------- */
   build();
   buildDeck(false);
-  $('foot').innerHTML = 'Las ideas centrales, las claves y las tarjetas resumen las notas de cada sesión. <button type="button" class="linkbtn" data-act="mydata">Mis datos</button>';
+  $('foot').innerHTML = 'Las ideas centrales, las claves y las tarjetas resumen las notas de cada sesión. <button type="button" class="linkbtn" data-act="mydata">Mis datos</button> · <button type="button" class="linkbtn" data-act="connect">Editar la web</button>';
   render();
   route();
+  loadNotas();
 })();
 
 </script>
