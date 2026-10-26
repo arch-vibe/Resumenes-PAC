@@ -8,6 +8,7 @@
   body { margin: 0; }
   [hidden] { display: none !important; }
 </style>
+<script src="config.js"></script>
 <title>Notas de catequesis PAC</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap">
 <style>
@@ -257,6 +258,50 @@
   .check { display: flex; align-items: center; gap: .5rem; margin: -.2rem 0 .8rem; font-size: .9rem; }
   .dr { display: grid; gap: .4rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }
   .linkbtn { padding: 0; font: inherit; color: var(--accent); background: none; border: 0; text-decoration: underline; }
+
+/* v7: jerarquía y cabecera fija */
+:root { --toph: 3.1rem; }
+.top { position: sticky; top: 0; z-index: 30; height: var(--toph); box-sizing: border-box; margin-inline: -1rem; padding: 0 1rem; gap: .5rem; background: var(--bg); border-bottom: 1px solid var(--line); }
+.brand { flex: none; font-size: .95rem; letter-spacing: -.005em; }
+.links { display: flex; gap: .35rem; flex: 1; justify-content: flex-end; min-width: 0; }
+.lnk { padding: .28rem .6rem; font-size: .76rem; font-weight: 600; white-space: nowrap; text-decoration: none; color: var(--accent); background: var(--accent-soft); border-radius: 999px; }
+.lnk:hover { background: var(--accent); color: var(--on-accent); }
+.wr { flex: none; width: 2.1rem; height: 2.1rem; padding: 0; font-size: 1.05rem; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 50%; }
+.wr:hover { color: var(--accent); border-color: var(--accent); }
+.sbar { top: var(--toph); }
+.dbar { top: var(--toph); }
+
+h2.sec { display: flex; align-items: center; gap: .6rem; margin: 1.9rem 0 .6rem; font-size: .7rem; letter-spacing: .12em; color: var(--ink); }
+h2.sec::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+.hero { margin-top: 1rem; padding: 0; background: none; border: 0; border-radius: 0; }
+.hero .meta { font-size: .74rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); }
+.hero h1 { margin: .25rem 0 .8rem; font-size: 1.7rem; line-height: 1.15; letter-spacing: -.01em; }
+.idea { margin: 0 0 1rem; padding: .85rem 1rem; border: 0; border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; background: var(--accent-soft); }
+.idea p { font-size: 1.2rem; line-height: 1.38; font-weight: 600; }
+.claves { margin: 0 0 1rem; padding-left: 1.3rem; font-size: .95rem; line-height: 1.45; color: var(--muted); }
+ol.claves li::marker { font-family: var(--sans); font-weight: 700; color: var(--accent); }
+.sess h1 { font-size: 1.75rem; line-height: 1.15; letter-spacing: -.01em; }
+.sess .claves { color: var(--ink); font-size: 1rem; }
+.sess .idea p { font-size: 1.2rem; }
+.qcard { border-radius: 8px; }
+.calbox { margin-top: 0; background: transparent; }
+.calbox h3 { margin-bottom: .4rem; text-transform: none; letter-spacing: 0; font-weight: 500; font-size: .78rem; }
+
+.tour { margin: 0 0 1rem; padding-left: 1.2rem; font-family: var(--serif); }
+.tour li { margin-bottom: .7rem; padding-left: .2rem; line-height: 1.45; }
+.tour li::marker { font-family: var(--sans); font-weight: 700; color: var(--accent); }
+.foot a { color: var(--accent); font-weight: 600; }
+.foot { line-height: 1.7; }
+.top { gap: .6rem; }
+.brand { font-size: .88rem; line-height: 1.1; max-width: 4.6rem; }
+.lnk { padding: .26rem .5rem; font-size: .72rem; }
+.links { gap: .3rem; }
+blockquote.idea { margin-inline: 0; font-style: normal; }
+.hero .claves { font-size: .9rem; line-height: 1.4; margin-bottom: .9rem; }
+.hero .claves li { margin-bottom: .25rem; }
+.hero .idea p { font-size: 1.12rem; }
+.hero h1 { font-size: 1.55rem; }
 </style>
 </head>
 <body>
@@ -686,6 +731,7 @@
   };
 
   const GLOSS = [
+    { id: 'abrazo', name: 'Abrazo conyugal', def: 'El mayor acto de entrega entre los esposos, el acto culmen del matrimonio. Los hace una sola carne, los da a conocer el uno al otro y es imagen de la Santísima Trinidad. Se vive mejor bebiendo de la gracia y bien ordenado.', from: ['oct-2026', 'oct-2025', 'jun-2026', 'jun-2025'] },
     { id: 'alianza', name: 'Alianza', def: 'El amor de Dios por cada uno, sellado con fidelidad por su parte. En el matrimonio, la alianza conyugal es una entrega total, un cheque en blanco que solo se firma con la ayuda de Dios.', from: ['ene-2025', 'may-2025-a', 'abr-2025'] },
     { id: 'autoconocimiento', name: 'Autoconocimiento', def: 'Saber quiénes somos. No según nuestras circunstancias, con el demonio de por medio, sino ante la mirada de Dios y según los dones que Él puso en nosotros. Se trabaja con la oración, la dirección espiritual y los sacramentos.', from: ['ene-2025', 'may-2025-b', 'jun-2026'] },
     { id: 'autodeterminacion', name: 'Autodeterminación', def: 'La capacidad de decidir libre y voluntariamente. Elegimos a Dios, no el capricho del momento ni los criterios del mundo. Los animales no la tienen.', from: ['ene-2025', 'may-2025-a', 'feb-2025'] },
@@ -696,6 +742,7 @@
     { id: 'desnudez', name: 'Desnudez originaria', def: 'Estar desnudos sin sentir vergüenza (Génesis 2,25): mirada limpia, interior libre. Es el modo en que nos tratamos para llegar a la comunión perfecta, y lo que buscamos recuperar entre esposos.', from: ['sep-2025', 'oct-2025', 'nov-2025'] },
     { id: 'don', name: 'Don y donación', def: 'Capacidad de amar y de donarse, huella de Dios en el corazón y semejanza con Él. El esposo no es una carga sino un don que se acoge tal como es, porque Dios ya lo ama así.', from: ['dic-2025', 'ene-2026', 'jun-2026'] },
     { id: 'esponsalicio', name: 'Significado esponsalicio del cuerpo', def: 'El cuerpo está preparado para entregarse al esposo. Va contra la idea actual de que «mi cuerpo está para mis ojos». Para vivirlo hacen falta autodominio y orden.', from: ['ene-2026'] },
+    { id: 'fecundidad', name: 'Fecundidad', def: 'La unión de los esposos es fecunda porque genera amor y vida. No hay que confundirla con fertilidad: el matrimonio unido da fruto aunque no siempre lleguen los hijos.', from: ['oct-2026'] },
     { id: 'inocencia', name: 'Inocencia originaria', def: 'El estado de gracia del principio: desnudos sin vergüenza y con mirada limpia. Cristo nos anima a volver a él a través de la redención.', from: ['nov-2024', 'may-2025-b', 'abr-2025'] },
     { id: 'pecado', name: 'Pecado original y naturaleza caída', def: 'El pecado es la pérdida de una gracia. Con el pecado original aparecen la vergüenza, la mirada turbia y la ruptura con Dios. Tenemos una doble dimensión: estado de gracia y estado pecaminoso.', from: ['nov-2024', 'sep-2025', 'may-2025-b'] },
     { id: 'pudor', name: 'Pudor', def: 'La vergüenza transformada por la gracia. Es el escudo que nos protege de la vergüenza: custodia el amor, protege al otro del deseo de uso y nos hace más humildes.', from: ['oct-2025'] },
@@ -712,7 +759,7 @@
     { ph: 'Al principio', t: 'Unidad originaria', x: 'Varón y mujer, una sola carne, con la misma dignidad y como ayuda adecuada el uno del otro. Desnudos y sin vergüenza, con mirada limpia.', terms: ['unidad', 'ayuda', 'desnudez', 'inocencia'], ses: ['mar-2025', 'jun-2025', 'sep-2025', 'nov-2025'] },
     { ph: 'La ruptura', t: 'Pecado original', x: 'Se enturbia la mirada: aparecen la vergüenza, el miedo a ser juzgados y la ruptura de la comunión con Dios.', terms: ['pecado', 'verguenza', 'concupiscencia'], ses: ['nov-2024', 'sep-2025', 'oct-2025'] },
     { ph: 'El camino de vuelta', t: 'De la vergüenza al pudor', x: 'Por la gracia, la vergüenza se vuelve pudor. Oración personal y conyugal, sacramentos y autodominio limpian la mirada.', terms: ['pudor', 'autodominio', 'purificacion'], ses: ['oct-2025', 'nov-2025', 'ene-2026'] },
-    { ph: 'La meta', t: 'Donación y comunión', x: 'Entregarse y acoger al esposo como un don, sin condiciones. Es el reflejo de la Trinidad y el camino a la santidad en el matrimonio.', terms: ['don', 'comunion', 'alianza', 'esponsalicio'], ses: ['abr-2025', 'ene-2026', 'jun-2026'] }
+    { ph: 'La meta', t: 'Donación y comunión', x: 'Entregarse y acoger al esposo como un don, sin condiciones. Es el reflejo de la Trinidad y el camino a la santidad en el matrimonio.', terms: ['don', 'comunion', 'alianza', 'esponsalicio', 'abrazo'], ses: ['abr-2025', 'ene-2026', 'jun-2026', 'oct-2026'] }
   ];
 
   const CARDS = [
@@ -773,11 +820,49 @@
     { q: '¿Qué orden de prioridades marcan las 10 claves?', a: 'Dios primero; después nuestro matrimonio; luego los hijos y, tras ellos, el resto de la familia.', s: 'oct-2024-a' },
     { q: '¿Quién pide perdón o perdona?', a: 'El que más ama, porque quiere acercar los corazones.', s: 'oct-2024-a' },
     { q: '¿En qué se diferencian la alegría y la diversión?', a: 'La alegría viene de dentro, del Espíritu Santo; la diversión está fuera.', s: 'oct-2024-a' },
-    { q: '¿Por qué decir sí a abrazar la cruz?', a: 'Porque amar cuando cuesta es el amor de Dios. Jesús lo hace sacramento y pone la gracia. Es como un entrenamiento: se sacan músculos en lo que cuesta.', s: 'oct-2024-a' }
+    { q: '¿Por qué decir sí a abrazar la cruz?', a: 'Porque amar cuando cuesta es el amor de Dios. Jesús lo hace sacramento y pone la gracia. Es como un entrenamiento: se sacan músculos en lo que cuesta.', s: 'oct-2024-a' },
+    { q: '¿Qué es el abrazo conyugal?', a: 'El mayor acto de entrega entre los esposos, el acto culmen del matrimonio y la imagen de la Santísima Trinidad.', s: 'oct-2026' },
+    { q: '¿Por qué es necesaria la unión conyugal para el matrimonio?', a: 'Para llegar a ser una sola carne, para ratificar la entrega y conocer a mi cónyuge (y saber a qué estoy llamado) y para ser reflejo de Dios en el mundo.', s: 'oct-2026' },
+    { q: '¿Por qué el abrazo conyugal es un acto de conocimiento?', a: 'Porque en él se conocen intimidades que solo conocen los esposos.', s: 'oct-2026' },
+    { q: '¿Qué diferencia hay entre unión fecunda y fertilidad?', a: 'La unión es fecunda porque genera amor y vida; no hay que confundirla con fertilidad.', s: 'oct-2026' },
+    { q: '¿Con qué se relaciona el abrazo conyugal según el caso?', a: 'Con destapar el corazón y la vergüenza, la mía y la de mi esposo, para dejarle entrar. Así crece la intimidad y la posibilidad de vivir la unión en presencia del Espíritu Santo.', s: 'oct-2026' },
+    { q: '¿De qué fuentes de gracia necesitamos vivir para estar en armonía?', a: 'De la eucaristía, la confesión, la oración conyugal y el abrazo conyugal.', s: 'oct-2026' },
+    { q: '¿Cómo reflejan los esposos a la Trinidad en el abrazo conyugal?', a: 'Dios es uno y trino: tres Personas, un solo Dios. Los esposos, dos personas, se hacen una sola carne.', s: 'oct-2026' }
   );
 
   /* Sesiones añadidas después de la primera versión. Cada una: id, date (AAAA-MM-DD), title, idea, claves[], pensar, terms[], text (las notas), added (fecha en que se añadió). */
-  const NEW = [];
+  const NEW = [
+    {
+      id: 'oct-2026', date: '2026-10-25',
+      title: 'El abrazo conyugal: entrega, conocimiento y vida',
+      idea: 'El abrazo conyugal es el mayor acto de entrega entre los esposos: los hace una sola carne, los da a conocer el uno al otro y es imagen de la Trinidad.',
+      claves: [
+        'El acto conyugal es un don de Dios: pide cuidado, delicadeza e importancia para entregar el cuerpo a quien me complementa.',
+        'Es necesario para el matrimonio por tres razones: llegar a ser una sola carne, ratificar la entrega y ser reflejo de Dios en el mundo.',
+        'Es un acto de conocimiento: solo los esposos conocen esa intimidad el uno del otro.',
+        'Es fecundo: genera amor y vida, y no hay que confundirlo con fertilidad.',
+        'Para vivir en armonía hay que beber de la fuente de la gracia: eucaristía, confesión, oración conyugal y abrazo conyugal.'
+      ],
+      pensar: '¿Cuido el abrazo conyugal como un don de Dios y lo vivo bien ordenado, o lo dejo para cuando sobra tiempo?',
+      terms: ['abrazo', 'fecundidad', 'comunion', 'verguenza', 'don'],
+      text: [
+        'El acto conyugal es un regalo de Dios, y por eso hay que tratarlo con cuidado, delicadeza e importancia: es entregar mi cuerpo a la persona que me complementa.',
+        'También se entienden mejor las heridas afectivas que se generan cuando se vive fuera del matrimonio.',
+        '«El abrazo conyugal es el mayor acto de entrega entre los esposos, el acto culmen, e imagen de la Santísima Trinidad.» Dios es uno y trino: tres Personas, un solo Dios.',
+        'Es además un acto de conocimiento: en él se conocen intimidades que solo conocen los esposos.',
+        '¿Por qué es necesaria la unión conyugal para el matrimonio?',
+        '- Para llegar a ser una sola carne.',
+        '- Para ratificar la entrega y lograr el conocimiento de mi cónyuge, y así saber a qué estoy llamado.',
+        '- Para ser reflejo de Dios en el mundo.',
+        'La unión es fecunda: un matrimonio unido no se separa, se conocen entre sí y son imagen de Dios. Genera amor y vida, y no hay que confundirlo con fertilidad.',
+        'Caso: la unión conyugal es la santidad en el matrimonio. El abrazo conyugal está relacionado con destapar mi corazón y la vergüenza, la de mi esposo y la mía, para dejarle entrar. Así aumenta nuestra intimidad y la posibilidad de vivir la unión en presencia del Espíritu Santo (las capas del alma).',
+        'Para poder vivir en armonía necesitamos vivir de la fuente de la gracia: la eucaristía, la confesión, la oración conyugal y el abrazo conyugal.',
+        'Hay que intentar aprovechar la oportunidad de vivir el abrazo conyugal bien ordenado.',
+        'En el caso se debatió sobre lo mundano del mundo y la importancia de dar ejemplo en casa.'
+      ].join('\n'),
+      added: '2026-10-26'
+    }
+  ];
 
 
   const MES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
@@ -792,8 +877,7 @@
   const reviewed = new Set(LS.get('pac.reviewed', []));
   const known = new Set(LS.get('pac.known', []));
   let my = LS.get('pac.my', {});
-  let cfg = LS.get('pac.gh', null);
-  let notasText = '';
+  let sheetSess = LS.get('pac.cache', []);
   const saveMy = () => LS.set('pac.my', my);
 
   function fold(s) {
@@ -867,7 +951,7 @@
   }
   function build() {
     const seed = E.map((e, i) => Object.assign({ seq: i, src: 'seed', key: e.date + '-00' }, e, LEARN[e.id] || {}));
-    const added = NEW.map((d, i) => fromRaw(d, 'new', i)).concat(parseNotas(notasText).map((d, i) => fromRaw(d, 'gh', 500 + i)));
+    const added = NEW.map((d, i) => fromRaw(d, 'new', i)).concat((Array.isArray(sheetSess) ? sheetSess : []).map((d, i) => fromRaw(d, 'sheet', 500 + i)));
     items = seed.concat(added);
     items.forEach((e) => {
       if (e.gap) { e.hay = fold(e.title + ' ' + e.text); e.body = ''; return; }
@@ -935,7 +1019,7 @@
     return (a > 0 ? '…' : '') + hl(e.body.slice(a, b), q) + (b < e.body.length ? '…' : '');
   }
   function isRecent(e) {
-    if ((e.src !== 'new' && e.src !== 'gh') || !e.added) return false;
+    if ((e.src !== 'new' && e.src !== 'sheet') || !e.added) return false;
     return Date.now() - new Date(e.added).getTime() < 21 * 864e5;
   }
   function row(e, q) {
@@ -971,12 +1055,16 @@
     }
     return h + '</div><div class="legend" aria-hidden="true"><span><i style="background:var(--accent)"></i>Con resumen</span><span><i style="border:1.5px dashed var(--accent)"></i>Sin resumen</span><span><i style="background:repeating-linear-gradient(135deg,var(--line) 0 3px,transparent 3px 7px);border:1px solid var(--line)"></i>No hubo</span></div>';
   }
-  const calBox = () => '<section class="calbox"><h3>Calendario · toca un mes</h3>' + calendarHtml() + '</section>';
+  const calBox = () => '<section class="calbox"><h3>Toca un mes para abrirlo</h3>' + calendarHtml() + '</section>';
 
   /* ---------- Vistas ---------- */
+  const URL_PAC = 'https://proyectoamorconyugal.es/';
+  const URL_EV = 'https://www.vaticannews.va/es/evangelio-de-hoy.html';
   function renderTop() {
-    $('top').innerHTML = '<div class="brand"><small>Catequesis PAC</small>Teología del cuerpo</div>' +
-      (connected() ? '<button type="button" class="btn primary" data-act="new">+ Nueva sesión</button>' : '');
+    $('top').innerHTML = '<div class="brand">Catequesis PAC</div>' +
+      '<nav class="links" aria-label="Enlaces"><a class="lnk" href="' + URL_EV + '" target="_blank" rel="noopener">Evangelio<span aria-hidden="true"> ↗</span></a>' +
+      '<a class="lnk" href="' + URL_PAC + '" target="_blank" rel="noopener">Amor conyugal<span aria-hidden="true"> ↗</span></a></nav>' +
+      '<button type="button" class="wr" data-act="write" aria-label="Escribir una sesión nueva" title="Escribir una sesión">✎</button>';
   }
 
   function renderHome() {
@@ -988,18 +1076,18 @@
     const pend = real.slice().reverse().find((e) => my[e.id] && my[e.id].comp && !my[e.id].done);
     let h = '';
     if (last) {
-      h += '<section class="hero"><div class="meta">Última sesión · ' + esc(dateLabel(last)) + ' · Resumen ' + sumTime(last) + '</div><h1>' + esc(last.title) + '</h1>' +
-        (last.idea ? '<div class="idea"><span class="lab">Idea central</span><p>' + esc(last.idea) + '</p></div>' : '') +
-        ((last.claves || []).length ? '<ul class="claves">' + last.claves.map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '') +
-        '<div class="acts"><button type="button" class="btn primary" data-open="' + last.id + '">Leer la sesión</button><button type="button" class="btn" data-act="copy" data-id="' + last.id + '">Copiar resumen</button></div></section>';
+      h += '<section class="hero"><div class="meta">Última sesión · ' + esc(dateLabel(last)) + ' · se lee en ' + sumTime(last) + '</div><h1>' + esc(last.title) + '</h1>' +
+        (last.idea ? '<blockquote class="idea"><span class="lab">Idea central</span><p>' + esc(last.idea) + '</p></blockquote>' : '') +
+        ((last.claves || []).length ? '<ol class="claves">' + last.claves.map((x) => '<li>' + esc(x) + '</li>').join('') + '</ol>' : '') +
+        '<div class="acts"><button type="button" class="btn primary" data-open="' + last.id + '">Leer la sesión</button><button type="button" class="btn ghost" data-act="copy" data-id="' + last.id + '">Copiar resumen</button></div></section>';
     }
-    h += calBox();
     if (pend) h += '<h2 class="sec">Mi compromiso</h2><div class="qcard"><p class="q">' + esc(my[pend.id].comp) + '</p><div class="chips2"><span>De la sesión</span>' + sesChips([pend.id]) + '</div><button type="button" class="btn" data-act="compdone" data-id="' + pend.id + '">Marcar como cumplido</button></div>';
     if (c) {
       h += '<h2 class="sec">Tarjeta del día</h2><div class="qcard"><p class="q">' + esc(c.q) + '</p>' +
         (S.homeShow ? '<p class="a">' + esc(c.a) + '</p><div class="chips2"><span>Ver en</span>' + sesChips([c.s]) + '</div>' : '<button type="button" class="btn" data-act="homeshow">Mostrar respuesta</button>') + '</div>';
     }
-    if (older.length) h += '<h2 class="sec">Sesiones anteriores</h2>' + older.map((e) => row(e, '')).join('') +
+    h += '<h2 class="sec">Todas las sesiones de un vistazo</h2>' + calBox();
+    if (older.length) h += '<h2 class="sec">Anteriores</h2>' + older.map((e) => row(e, '')).join('') +
       '<div class="acts" style="margin-top:.7rem"><button type="button" class="btn" data-tab="sesiones">Ver todas (' + real.length + ')</button></div>';
     h += '<div class="prog"><span>' + rv + ' de ' + real.length + ' sesiones repasadas</span><span>' + Math.round(100 * rv / Math.max(1, real.length)) + '%</span><div class="bar2"><i style="width:' + Math.round(100 * rv / Math.max(1, real.length)) + '%"></i></div></div>';
     $('view').innerHTML = h;
@@ -1051,7 +1139,7 @@
     const i = real.indexOf(e), older = real[i - 1], newer = real[i + 1];
     const done = reviewed.has(e.id), m = my[e.id] || {};
     let h = '<div class="dbar"><button type="button" class="btn ghost" data-act="back">← Volver</button><div class="pg">' +
-      (e.src === 'gh' && connected() ? '<button type="button" class="btn" data-act="edit" data-id="' + e.id + '">Editar</button>' : '') +
+      (e.src === 'sheet' && connected() ? '<button type="button" class="btn" data-act="edit" data-id="' + e.id + '">Editar</button>' : '') +
       '<button type="button" class="btn" data-act="copy" data-id="' + e.id + '">Copiar</button></div></div>' +
       '<article class="sess"><div class="meta">' + esc(dateLabel(e)) + ' · Resumen ' + sumTime(e) + ' · Notas ' + e.mins + ' min' + '</div><h1>' + hl(e.title, q) + '</h1>' + (e.sub ? '<p class="sub">' + hl(e.sub, q) + '</p>' : '') +
       (e.idea ? '<div class="idea"><span class="lab">Idea central</span><p>' + hl(e.idea, q) + '</p></div>' : '') +
@@ -1124,6 +1212,14 @@
   /* ---------- Hoja y avisos ---------- */
   function openSheet(html) { $('sheet-c').innerHTML = html; $('sheet').hidden = false; $('sheet-c').scrollTop = 0; }
   function closeSheet() { $('sheet').hidden = true; $('sheet-c').innerHTML = ''; S.confirm = null; }
+  function openTour() {
+    LS.set('pac.tour', 1);
+    openSheet('<h2>Cómo funciona</h2><ol class="tour">' +
+      '<li><b>Lee en 30 segundos.</b> Cada sesión empieza por su idea central y sus claves. Las notas completas están más abajo.</li>' +
+      '<li><b>Encuentra rápido.</b> Toca un mes del calendario o usa el buscador en Sesiones. Toca un concepto para ver su definición.</li>' +
+      '<li><b>Repasa.</b> En Repasar tienes tarjetas de pregunta y respuesta. Tus compromisos y notas se guardan solo en tu móvil.</li></ol>' +
+      '<div class="acts"><button type="button" class="btn primary" data-act="close">Entendido</button></div>');
+  }
   let toastT;
   function toast(msg) {
     const t = $('toast'); t.textContent = msg; t.hidden = false;
@@ -1161,197 +1257,107 @@
     } catch (err) { fallback(); }
   }
 
-  /* ---------- Sesiones nuevas: archivo notas.txt en GitHub ---------- */
-  const HDR = /^#\s*(\d{4}-\d{2}(?:-\d{2})?)\s*(?:[|–—-]\s*)?(.*)$/;
-  const LABEL = /^(Idea|Pensar|Conceptos|Claves|Notas)\s*:\s*(.*)$/i;
-  const connected = () => !!(cfg && cfg.token && cfg.repo);
-  function slug(s) { return fold(s).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40); }
-  function splitBlocks(text) {
-    const lines = String(text || '').replace(/\r/g, '').split('\n');
-    const pre = [], blocks = [];
-    let cur = null;
-    lines.forEach((ln) => {
-      if (HDR.test(ln)) { cur = { hdr: ln.trim(), lines: [ln] }; blocks.push(cur); }
-      else if (cur) cur.lines.push(ln); else pre.push(ln);
-    });
-    return { pre: pre.join('\n').trim(), blocks: blocks.map((b) => ({ hdr: b.hdr, text: b.lines.join('\n').trim() })) };
-  }
-  const joinBlocks = (pre, blocks) => (pre ? pre + '\n\n' : '') + blocks.map((b) => b.text).join('\n\n') + '\n';
-  function termIds(str) {
-    const out = [];
-    str.split(/[,;]/).map((x) => fold(x.trim())).filter(Boolean).forEach((tok) => {
-      const g = GLOSS.find((x) => x.id === tok || fold(x.name).indexOf(tok) === 0) || GLOSS.find((x) => fold(x.name).indexOf(tok) !== -1);
-      if (g && out.indexOf(g.id) === -1) out.push(g.id);
-    });
-    return out;
-  }
-  function parseNotas(text) {
-    const used = {};
-    return splitBlocks(text).blocks.map((b) => {
-      const m = b.hdr.match(HDR);
-      const d = { date: m[1], title: (m[2] || '').trim() || 'Sesión sin título', idea: '', pensar: '', claves: [], terms: [], hdr: b.hdr, added: m[1] };
-      let mode = 'notes', explicit = false;
-      const notes = [];
-      b.text.split('\n').slice(1).forEach((raw) => {
-        const ln = raw.trim();
-        if (ln.indexOf('//') === 0) return;
-        const l = explicit ? null : ln.match(LABEL);
-        if (l) {
-          const k = l[1].toLowerCase(), v = l[2].trim();
-          if (k === 'idea') { d.idea = v; mode = 'idea'; }
-          else if (k === 'pensar') { d.pensar = v; mode = 'pensar'; }
-          else if (k === 'conceptos') { d.terms = termIds(v); mode = 'x'; }
-          else if (k === 'claves') { mode = 'claves'; if (v) d.claves.push(v); }
-          else { mode = 'notes'; explicit = true; if (v) notes.push(v); }
-          return;
-        }
-        if (mode === 'claves' && /^([-•*.]|\d+[.)])\s*\S/.test(ln)) { d.claves.push(ln.replace(/^([-•*.]|\d+[.)])\s*/, '')); return; }
-        if (mode === 'claves' && !ln) return;
-        if ((mode === 'idea' || mode === 'pensar') && !ln) { mode = 'notes'; return; }
-        if (mode === 'idea') { d.idea += ' ' + ln; return; }
-        if (mode === 'pensar') { d.pensar += ' ' + ln; return; }
-        if (mode === 'x' && !ln) return;
-        mode = 'notes'; notes.push(raw.replace(/\s+$/, ''));
-      });
-      d.text = notes.join('\n').trim();
-      let id = 'n-' + m[1] + '-' + slug(d.title);
-      if (used[id]) id += '-' + (used[id]++); else used[id] = 1;
-      d.id = id;
-      return d;
-    });
-  }
-  function composeBlock(d) {
-    const L = ['# ' + d.date + ' | ' + d.title];
-    if (d.idea) L.push('Idea: ' + d.idea.replace(/\s*\n+\s*/g, ' '));
-    if (d.claves.length) { L.push('Claves:'); d.claves.forEach((c) => L.push('- ' + c)); }
-    if (d.pensar) L.push('Pensar: ' + d.pensar.replace(/\s*\n+\s*/g, ' '));
-    if (d.terms.length) L.push('Conceptos: ' + d.terms.map((t) => glossById[t].name).join(', '));
-    L.push('Notas:'); L.push(d.text);
-    return L.join('\n');
-  }
-
-  const b64e = (s) => { let bin = ''; new TextEncoder().encode(s).forEach((x) => { bin += String.fromCharCode(x); }); return btoa(bin); };
-  const b64d = (s) => { const bin = atob(String(s).replace(/\s/g, '')); return new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))); };
-  const apiUrl = () => 'https://api.github.com/repos/' + cfg.repo + '/contents/' + cfg.path.split('/').map(encodeURIComponent).join('/');
-  const ghHead = (json) => Object.assign({ Authorization: 'Bearer ' + cfg.token, Accept: 'application/vnd.github+json' }, json ? { 'Content-Type': 'application/json' } : {});
-  async function ghGet() {
-    const r = await fetch(apiUrl() + '?ref=' + encodeURIComponent(cfg.branch) + '&t=' + Date.now(), { headers: ghHead(false), cache: 'no-store' });
-    if (r.status === 404) return { text: '', sha: null };
-    if (!r.ok) throw { status: r.status };
+  /* ---------- Sesiones nuevas: hoja de Google ---------- */
+  const apiUrl = () => String(window.PAC_URL || LS.get('pac.url', '') || '').trim();
+  const apiKey = () => String(LS.get('pac.key', '') || '');
+  const connected = () => !!(apiUrl() && apiKey());
+  async function apiCall(req) {
+    const r = await fetch(apiUrl(), { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ key: apiKey() }, req)) });
     const j = await r.json();
-    return { text: b64d(j.content), sha: j.sha };
+    if (!j || !j.ok) throw { code: (j && j.error) || 'error' };
+    return j;
   }
-  async function ghPut(text, sha, msg) {
-    const body = { message: msg, content: b64e(text), branch: cfg.branch };
-    if (sha) body.sha = sha;
-    const r = await fetch(apiUrl(), { method: 'PUT', headers: ghHead(true), body: JSON.stringify(body) });
-    if (!r.ok) throw { status: r.status };
-    return r.json();
-  }
-  function ghMsg(e) {
-    const s = e && e.status;
-    if (s === 401) return 'El token no es válido o ha caducado.';
-    if (s === 403) return 'El token no tiene permiso de escritura en este repositorio.';
-    if (s === 404) return 'No se encuentra el repositorio o la rama. Revisa los datos.';
-    if (s === 409 || s === 422) return 'El archivo cambió mientras guardabas. Inténtalo de nuevo.';
-    return 'No se pudo conectar con GitHub. Revisa tu conexión.';
-  }
-  async function mutate(fn, msg) {
-    for (let tries = 0; ; tries++) {
-      const cur = await ghGet();
-      const next = fn(cur.text);
-      try { await ghPut(next, cur.sha, msg); notasText = next; return; }
-      catch (e) { if ((e.status === 409 || e.status === 422) && tries < 1) continue; throw e; }
-    }
-  }
+  const apiMsg = (e) => e && e.code === 'clave' ? 'La clave no es correcta.' : 'No se pudo guardar. Revisa tu conexión e inténtalo de nuevo.';
   async function loadNotas() {
+    const url = apiUrl(); if (!url) return;
     try {
-      let text = null;
-      if (connected()) text = (await ghGet()).text;
-      else { const r = await fetch('notas.txt?t=' + Date.now(), { cache: 'no-store' }); if (r.ok) text = await r.text(); }
-      if (text != null && text !== notasText) { notasText = text; refresh(); }
+      const r = await fetch(url + (url.indexOf('?') === -1 ? '?' : '&') + 't=' + Date.now(), { cache: 'no-store' });
+      const j = await r.json();
+      if (j && Array.isArray(j.sessions)) { sheetSess = j.sessions; LS.set('pac.cache', sheetSess); refresh(); }
     } catch (e) {}
   }
 
-  let editHdr = null, pickTerms = new Set();
+  const DRAFT = 'pac.draft';
+  let editId = null, pickTerms = new Set(), saving = false;
   function todayStr() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function readForm() {
+    return {
+      date: $('e-date').value || todayStr(), title: $('e-title').value.trim(), text: $('e-text').value.trim(), idea: $('e-idea').value.trim(),
+      claves: $('e-claves').value, pensar: $('e-pensar').value.trim(), terms: Array.from(pickTerms)
+    };
+  }
   function openEditor(id) {
     const cur = id ? byId[id] : null;
-    editHdr = cur ? cur.hdr : null;
-    pickTerms = new Set((cur && cur.terms) || []);
-    const date = cur ? cur.date + '-' + (cur.day || '01') : todayStr();
-    openSheet('<h2>' + (cur ? 'Editar sesión' : 'Nueva sesión') + '</h2><p class="hint">Se guarda en tu repositorio de GitHub y todos la verán en 1 o 2 minutos.</p>' +
-      '<label class="field">Fecha de la catequesis<input type="date" id="e-date" value="' + esc(date) + '"></label>' +
-      '<label class="field">Título<input type="text" id="e-title" maxlength="120" value="' + esc(cur ? cur.title : '') + '"></label>' +
-      '<label class="field">Tus notas<textarea id="e-text" rows="8" placeholder="Pega o escribe aquí tus notas. Las líneas que empiezan por «.» o «-» se muestran como viñetas.">' + esc(cur ? cur.raw : '') + '</textarea></label>' +
-      '<label class="field">Idea central (una frase, opcional)<textarea id="e-idea" rows="2" maxlength="300">' + esc(cur ? cur.idea : '') + '</textarea></label>' +
-      '<label class="field">Claves (una por línea, opcional)<textarea id="e-claves" rows="3">' + esc(cur && cur.claves ? cur.claves.join('\n') : '') + '</textarea></label>' +
-      '<label class="field">Para pensar (opcional)<input type="text" id="e-pensar" maxlength="240" value="' + esc(cur ? cur.pensar : '') + '"></label>' +
-      '<span class="lab">Conceptos relacionados (opcional)</span><div class="terms" id="e-terms">' + GLOSS.map((g) => '<button type="button" class="chip pick" data-pick="' + g.id + '" aria-pressed="' + pickTerms.has(g.id) + '">' + esc(g.name.replace(/ y donación| originaria| y naturaleza caída/g, '')) + '</button>').join('') + '</div>' +
-      '<div class="acts" style="margin-top:1rem"><button type="button" class="btn primary" id="e-save" data-act="save">Guardar</button><button type="button" class="btn" data-act="close">Cancelar</button>' + (cur ? '<button type="button" class="btn danger" data-act="delask">Borrar</button>' : '') + '</div>');
+    editId = cur ? cur.id : null;
+    const dr = !cur ? LS.get(DRAFT, null) : null;
+    const v = cur ? { date: cur.date + '-' + (cur.day || '01'), title: cur.title, text: cur.raw, idea: cur.idea, claves: (cur.claves || []).join('\n'), pensar: cur.pensar, terms: cur.terms || [] }
+      : (dr || { date: todayStr(), title: '', text: '', idea: '', claves: '', pensar: '', terms: [] });
+    pickTerms = new Set(v.terms || []);
+    openSheet('<h2>' + (cur ? 'Editar sesión' : 'Nueva sesión') + '</h2>' +
+      '<p class="hint">' + (dr && (dr.title || dr.text) ? 'Hemos recuperado tu borrador. ' : '') + (cur ? '' : 'Mientras escribes se guarda un borrador en este móvil. ') + 'Pulsa Guardar para publicarla en la web.</p>' +
+      '<label class="field">Fecha de la catequesis<input type="date" id="e-date" value="' + esc(v.date) + '"></label>' +
+      '<label class="field">Título<input type="text" id="e-title" maxlength="120" placeholder="Ej.: El pudor y la mirada" value="' + esc(v.title) + '"></label>' +
+      '<label class="field">Tus notas<textarea id="e-text" rows="9" placeholder="Pega o escribe aquí tus notas. Las líneas que empiezan por «.» o «-» se muestran como viñetas.">' + esc(v.text) + '</textarea></label>' +
+      '<details class="notes"><summary>Añadir resumen (opcional)</summary><div class="notes-body">' +
+      '<label class="field">Idea central (una frase)<textarea id="e-idea" rows="2" maxlength="300">' + esc(v.idea) + '</textarea></label>' +
+      '<label class="field">Claves (una por línea)<textarea id="e-claves" rows="3">' + esc(v.claves) + '</textarea></label>' +
+      '<label class="field">Para pensar<input type="text" id="e-pensar" maxlength="240" value="' + esc(v.pensar) + '"></label>' +
+      '<span class="lab">Conceptos relacionados</span><div class="terms" id="e-terms">' + GLOSS.map((g) => '<button type="button" class="chip pick" data-pick="' + g.id + '" aria-pressed="' + pickTerms.has(g.id) + '">' + esc(g.name.replace(/ y donación| originaria| y naturaleza caída/g, '')) + '</button>').join('') + '</div></div></details>' +
+      '<div class="acts" style="margin-top:1rem"><button type="button" class="btn primary" id="e-save" data-act="save">Guardar</button><button type="button" class="btn" data-act="close">Cerrar</button>' + (cur ? '<button type="button" class="btn danger" data-act="delask">Borrar</button>' : '') + '</div>' +
+      '<p class="hint" style="margin-top:.8rem"><button type="button" class="linkbtn" data-act="goff">Olvidar la clave en este móvil</button></p>');
   }
-  let saving = false;
   async function saveSession() {
     if (saving) return;
-    const text = $('e-text').value.trim(), title = $('e-title').value.trim();
-    if (!title && !text) { toast('Añade al menos un título o tus notas.'); return; }
-    const d = {
-      date: $('e-date').value || todayStr(), title: title || text.split(/\r?\n/)[0].slice(0, 80), idea: $('e-idea').value.trim(),
-      claves: $('e-claves').value.split('\n').map((x) => x.trim()).filter(Boolean), pensar: $('e-pensar').value.trim(), terms: Array.from(pickTerms), text: text
+    const f = readForm();
+    if (!f.title && !f.text) { toast('Añade al menos un título o tus notas.'); return; }
+    const old = editId ? sheetSess.find((x) => x.id === editId) : null;
+    const doc = {
+      id: editId || 's' + Date.now().toString(36), date: f.date, title: f.title || f.text.split(/\r?\n/)[0].slice(0, 80), idea: f.idea,
+      claves: f.claves.split('\n').map((x) => x.trim()).filter(Boolean), pensar: f.pensar, terms: f.terms, text: f.text,
+      added: old ? old.added || todayStr() : todayStr()
     };
-    const block = composeBlock(d), entry = { hdr: block.split('\n')[0], text: block };
     saving = true;
     const btn = $('e-save'); if (btn) { btn.disabled = true; btn.textContent = 'Guardando…'; }
     try {
-      await mutate((txt) => {
-        const sp = splitBlocks(txt), i = editHdr ? sp.blocks.findIndex((b) => b.hdr === editHdr) : -1;
-        if (i >= 0) sp.blocks[i] = entry; else sp.blocks.push(entry);
-        return joinBlocks(sp.pre, sp.blocks);
-      }, (editHdr ? 'Editar sesión: ' : 'Añadir sesión: ') + d.title);
-      closeSheet(); refresh(); toast('Guardado. Todos la verán en 1 o 2 minutos.');
-    } catch (e) { toast(ghMsg(e)); if (btn) { btn.disabled = false; btn.textContent = 'Guardar'; } }
+      await apiCall({ op: 'save', session: doc });
+      sheetSess = sheetSess.filter((x) => x.id !== doc.id).concat([doc]); LS.set('pac.cache', sheetSess);
+      if (!editId) LS.set(DRAFT, null);
+      closeSheet(); refresh(); toast('Guardada. Ya la ven todos.'); loadNotas();
+    } catch (e) {
+      toast(apiMsg(e));
+      if (e && e.code === 'clave') { LS.set('pac.key', ''); closeSheet(); openConnect(); }
+      else if (btn) { btn.disabled = false; btn.textContent = 'Guardar'; }
+    }
     saving = false;
   }
   async function delSession() {
-    if (saving || !editHdr) return;
+    if (saving || !editId) return;
     saving = true;
     try {
-      await mutate((txt) => { const sp = splitBlocks(txt); return joinBlocks(sp.pre, sp.blocks.filter((b) => b.hdr !== editHdr)); }, 'Borrar sesión');
+      await apiCall({ op: 'delete', id: editId });
+      sheetSess = sheetSess.filter((x) => x.id !== editId); LS.set('pac.cache', sheetSess);
       closeSheet(); refresh(); toast('Sesión borrada.');
-    } catch (e) { toast(ghMsg(e)); }
+    } catch (e) { toast(apiMsg(e)); }
     saving = false;
   }
-  function guessRepo() {
-    const h = location.hostname;
-    if (/\.github\.io$/.test(h)) {
-      const user = h.split('.')[0], seg = location.pathname.split('/')[1];
-      return user + '/' + (seg && !/\.html?$/.test(seg) ? seg : user + '.github.io');
-    }
-    return '';
-  }
   function openConnect() {
-    const c = cfg || {};
-    openSheet('<h2>Editar la web</h2><p class="hint">Para escribir sesiones desde aquí, la web guarda tus notas en el archivo <b>notas.txt</b> de tu repositorio de GitHub. Hace falta un «token» personal con permiso solo sobre ese repositorio. Se guarda únicamente en este dispositivo.</p>' +
-      '<label class="field">Repositorio (usuario/repositorio)<input type="text" id="g-repo" autocomplete="off" autocapitalize="none" placeholder="usuario/catequesis" value="' + esc(c.repo || guessRepo()) + '"></label>' +
-      '<label class="field">Rama<input type="text" id="g-branch" autocomplete="off" autocapitalize="none" value="' + esc(c.branch || 'main') + '"></label>' +
-      '<label class="field">Archivo de notas<input type="text" id="g-path" autocomplete="off" autocapitalize="none" value="' + esc(c.path || 'notas.txt') + '"></label>' +
-      '<label class="field">Token' + (c.token ? ' (ya guardado; déjalo vacío para mantenerlo)' : '') + '<input type="password" id="g-token" autocomplete="off" placeholder="github_pat_…"></label>' +
-      '<details class="notes"><summary>Cómo crear el token</summary><div class="notes-body"><ol><li>En GitHub: tu foto, Settings, Developer settings, Personal access tokens, Fine-grained tokens, Generate new token.</li><li>En «Repository access» elige «Only select repositories» y marca este repositorio.</li><li>En «Permissions», «Repository permissions», pon «Contents» en «Read and write».</li><li>Genera el token, cópialo y pégalo arriba.</li></ol></div></details>' +
-      '<div class="acts" style="margin-top:1rem"><button type="button" class="btn primary" data-act="gsave">Guardar y probar</button><button type="button" class="btn" data-act="close">Cerrar</button>' + (c.token ? '<button type="button" class="btn danger" data-act="goff">Desconectar</button>' : '') + '</div>');
+    openSheet('<h2>Escribir en la web</h2><p class="hint">Escribe la clave de edición que pusiste al crear la hoja de Google. Solo hace falta una vez en cada móvil.</p>' +
+      (window.PAC_URL ? '' : '<label class="field">Dirección de la hoja (termina en /exec)<input type="text" id="g-url" autocomplete="off" autocapitalize="none" placeholder="https://script.google.com/macros/s/…/exec" value="' + esc(LS.get('pac.url', '')) + '"></label>') +
+      '<label class="field">Clave de edición<input type="password" id="g-key" autocomplete="off"></label>' +
+      '<div class="acts" style="margin-top:1rem"><button type="button" class="btn primary" data-act="gsave">Continuar</button><button type="button" class="btn" data-act="close">Cerrar</button></div>');
   }
   async function saveCfg() {
-    const repo = $('g-repo').value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\.git$/, '').replace(/\/$/, '');
-    const token = $('g-token').value.trim() || (cfg && cfg.token) || '';
-    if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) { toast('Escribe el repositorio como usuario/repositorio.'); return; }
-    if (!token) { toast('Pega el token.'); return; }
-    const prev = cfg;
-    cfg = { repo: repo, branch: $('g-branch').value.trim() || 'main', path: $('g-path').value.trim() || 'notas.txt', token: token };
-    try {
-      const r = await ghGet();
-      LS.set('pac.gh', cfg); notasText = r.text; closeSheet(); refresh(); toast('Conectado. Ya puedes añadir sesiones.');
-    } catch (e) { cfg = prev; toast(ghMsg(e)); }
+    const urlIn = $('g-url') ? $('g-url').value.trim() : '', key = $('g-key').value;
+    if ($('g-url')) {
+      if (!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(urlIn)) { toast('La dirección debe terminar en /exec.'); return; }
+      LS.set('pac.url', urlIn);
+    }
+    if (!key) { toast('Escribe la clave.'); return; }
+    LS.set('pac.key', key);
+    try { await apiCall({ op: 'ping' }); closeSheet(); render(); toast('Listo. Ya puedes escribir.'); loadNotas(); openEditor(null); }
+    catch (e) { LS.set('pac.key', ''); toast(e && e.code === 'clave' ? 'La clave no es correcta.' : 'No se pudo conectar con la hoja. Revisa la dirección.'); }
   }
-  function disconnect() { cfg = null; LS.set('pac.gh', null); closeSheet(); refresh(); toast('Desconectado.'); }
+  function disconnect() { LS.set('pac.key', ''); closeSheet(); render(); toast('Clave olvidada en este móvil.'); }
 
   /* ---------- Mis datos: copia de seguridad ---------- */
   function openData() {
@@ -1403,6 +1409,7 @@
   }
   function refresh() {
     build();
+    if (S.sid && document.activeElement && /^my-/.test(document.activeElement.id)) return;
     if (S.sid && !byId[S.sid]) { S.sid = null; S.tab = 'sesiones'; }
     render();
   }
@@ -1421,7 +1428,7 @@
     const f = t.closest('[data-f]');
     if (f) { S.filter = f.dataset.f; renderChips(); renderResults(); return; }
     const pk = t.closest('[data-pick]');
-    if (pk) { const id = pk.dataset.pick; if (pickTerms.has(id)) pickTerms.delete(id); else pickTerms.add(id); pk.setAttribute('aria-pressed', pickTerms.has(id)); return; }
+    if (pk) { const id = pk.dataset.pick; if (pickTerms.has(id)) pickTerms.delete(id); else pickTerms.add(id); pk.setAttribute('aria-pressed', pickTerms.has(id)); if (!editId) LS.set(DRAFT, readForm()); return; }
     const rv = t.closest('[data-rev]');
     if (rv) { const id = rv.dataset.rev; if (reviewed.has(id)) reviewed.delete(id); else reviewed.add(id); LS.set('pac.reviewed', Array.from(reviewed)); const on = reviewed.has(id); rv.textContent = on ? 'Repasada ✓' : 'Marcar como repasada'; rv.classList.toggle('done', on); return; }
     if (t.closest('[data-close]')) { closeSheet(); return; }
@@ -1441,18 +1448,20 @@
     else if (act === 'save') saveSession();
     else if (act === 'delask') { a.dataset.act = 'del'; a.textContent = '¿Seguro? Borrar'; }
     else if (act === 'del') delSession();
-    else if (act === 'connect') openConnect();
+    else if (act === 'write') { if (connected()) openEditor(null); else openConnect(); }
     else if (act === 'gsave') saveCfg();
     else if (act === 'goff') disconnect();
     else if (act === 'copydata') copyRaw(S.dump || '', 'Copiar mis datos');
     else if (act === 'import') importData();
     else if (act === 'mydata') openData();
+    else if (act === 'tour') openTour();
     else deckAct(act);
   });
   document.addEventListener('input', (ev) => {
     const t = ev.target;
     if (t.id === 'q') { S.q = t.value; renderResults(); }
     else if (t.id === 'cq') { S.cq = t.value; renderTerms(); }
+    else if (t.id && t.id.indexOf('e-') === 0 && !editId && $('e-title')) LS.set(DRAFT, readForm());
     else if (t.id === 'my-comp' || t.id === 'my-note') {
       const cur = my[S.sid] || {};
       cur[t.id === 'my-comp' ? 'comp' : 'note'] = t.value; my[S.sid] = cur; saveMy();
@@ -1460,6 +1469,7 @@
   });
   document.addEventListener('change', (ev) => {
     const t = ev.target;
+    if (t.id === 'e-date' && !editId && $('e-title')) { LS.set(DRAFT, readForm()); return; }
     if (t.id === 'pend') { onlyPending = t.checked; buildDeck(false); renderReview(); }
     else if (t.id === 'my-done') { my[S.sid] = Object.assign({}, my[S.sid], { done: t.checked }); saveMy(); }
   });
@@ -1469,9 +1479,10 @@
   /* ---------- Arranque ---------- */
   build();
   buildDeck(false);
-  $('foot').innerHTML = 'Las ideas centrales, las claves y las tarjetas resumen las notas de cada sesión. <button type="button" class="linkbtn" data-act="mydata">Mis datos</button> · <button type="button" class="linkbtn" data-act="connect">Editar la web</button>';
+  $('foot').innerHTML = '<a href="' + URL_EV + '" target="_blank" rel="noopener">Evangelio del día</a> · <a href="' + URL_PAC + '" target="_blank" rel="noopener">Proyecto Amor Conyugal</a><br>Las ideas centrales, las claves y las tarjetas resumen las notas de cada sesión. <button type="button" class="linkbtn" data-act="tour">Cómo funciona</button> · <button type="button" class="linkbtn" data-act="mydata">Mis datos</button>';
   render();
   route();
+  if (!LS.get('pac.tour', 0)) openTour();
   loadNotas();
 })();
 
